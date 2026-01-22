@@ -1,5 +1,5 @@
 """
-DRL models from ElegantRL: https://github.com/AI4Finance-Foundation/ElegantRL
+来自ElegantRL的DRL模型：https://github.com/AI4Finance-Foundation/ElegantRL
 """
 
 from __future__ import annotations
@@ -27,20 +27,20 @@ ON_POLICY_MODELS = ["ppo"]
 
 
 class DRLAgent:
-    """Implementations of DRL algorithms
-    Attributes
+    """DRL算法的实现
+    属性
     ----------
-        env: gym environment class
-            user-defined class
-    Methods
+        env: gym环境类
+            用户定义的类
+    方法
     -------
         get_model()
-            setup DRL algorithms
+            设置DRL算法
         train_model()
-            train DRL algorithms in a train dataset
-            and output the trained model
+            在训练数据集中训练DRL算法
+            并输出训练后的模型
         DRL_prediction()
-            make a prediction in a test dataset and get results
+            在测试数据集中进行预测并获得结果
     """
 
     def __init__(self, env, price_array, tech_array, turbulence_array):
@@ -83,21 +83,21 @@ class DRLAgent:
             try:
                 model.break_step = int(
                     2e5
-                )  # break training if 'total_step > break_step'
+                )  # 如果'total_step > break_step'则中断训练
                 model.net_dims = (
                     128,
                     64,
-                )  # the middle layer dimension of MultiLayer Perceptron
-                model.gamma = self.gamma  # discount factor of future rewards
+                )  # 多层感知机的中间层维度
+                model.gamma = self.gamma  # 未来奖励的折扣因子
                 model.horizon_len = model.max_step
-                model.repeat_times = 16  # repeatedly update network using ReplayBuffer to keep critic's loss small
+                model.repeat_times = 16  # 重复使用ReplayBuffer更新网络以保持评论家的损失较小
                 model.learning_rate = model_kwargs.get("learning_rate", 1e-4)
-                model.state_value_tau = 0.1  # the tau of normalize for value and state `std = (1-std)*std + tau*std`
+                model.state_value_tau = 0.1  # 价值和状态标准化的tau `std = (1-std)*std + tau*std`
                 model.eval_times = model_kwargs.get("eval_times", 2**5)
                 model.eval_per_step = int(2e4)
             except BaseException:
                 raise ValueError(
-                    "Fail to read arguments, please check 'model_kwargs' input."
+                    "读取参数失败，请检查'model_kwargs'输入。"
                 )
         return model
 
@@ -128,7 +128,7 @@ class DRLAgent:
         actor_path = f"{cwd}/act.pth"
         net_dim = [2**7]
 
-        """init"""
+        """初始化"""
         env = environment
         env_class = env
         args = Config(agent_class=agent_class, env_class=env_class, env_args=env_args)
@@ -146,7 +146,7 @@ class DRLAgent:
         if_discrete = env.if_discrete
         device = next(act.parameters()).device
         state = env.reset()
-        episode_returns = []  # the cumulative_return / initial_account
+        episode_returns = []  # 累计收益 / 初始账户
         episode_total_assets = [env.initial_total_asset]
         max_step = env.max_step
         for steps in range(max_step):
@@ -156,7 +156,7 @@ class DRLAgent:
             a_tensor = act(s_tensor).argmax(dim=1) if if_discrete else act(s_tensor)
             action = (
                 a_tensor.detach().cpu().numpy()[0]
-            )  # not need detach(), because using torch.no_grad() outside
+            )  # 不需要detach()，因为外部使用torch.no_grad()
             state, reward, done, _ = env.step(action)
             total_asset = env.amount + (env.price_ary[env.day] * env.stocks).sum()
             episode_total_assets.append(total_asset)
@@ -164,6 +164,6 @@ class DRLAgent:
             episode_returns.append(episode_return)
             if done:
                 break
-        print("Test Finished!")
-        print("episode_retuen", episode_return)
+        print("测试完成!")
+        print("episode_return", episode_return)
         return episode_total_assets

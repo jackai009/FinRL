@@ -15,7 +15,7 @@ from finrl.meta.preprocessor.yahoodownloader import YahooDownloader
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
     """
-    load csv dataset from path
+    从路径加载csv数据集
     :return: (df) pandas dataframe
     """
     # _data = pd.read_csv(f"{config.DATASET_DIR}/{file_name}")
@@ -25,7 +25,7 @@ def load_dataset(*, file_name: str) -> pd.DataFrame:
 
 def data_split(df, start, end, target_date_col="date"):
     """
-    split the dataset into training or testing using date
+    使用日期将数据集拆分为训练集或测试集
     :param data: (df) pandas dataframe, start, end
     :return: (df) pandas dataframe
     """
@@ -42,21 +42,20 @@ def convert_to_datetime(time):
 
 
 class GroupByScaler(BaseEstimator, TransformerMixin):
-    """Sklearn-like scaler that scales considering groups of data.
+    """类似Sklearn的缩放器，考虑数据组进行缩放。
 
-    In the financial setting, this scale can be used to normalize a DataFrame
-    with time series of multiple tickers. The scaler will fit and transform
-    data for each ticker independently.
+    在金融环境中，这个缩放器可以用来标准化包含多个股票代码时间序列的DataFrame。
+    缩放器将独立地为每个股票代码拟合和转换数据。
     """
 
     def __init__(self, by, scaler=MaxAbsScaler, columns=None, scaler_kwargs=None):
-        """Initializes GoupBy scaler.
+        """初始化GoupBy缩放器。
 
-        Args:
-            by: Name of column that will be used to group.
-            scaler: Scikit-learn scaler class to be used.
-            columns: List of columns that will be scaled.
-            scaler_kwargs: Keyword arguments for chosen scaler.
+        参数：
+            by: 将用于分组的列名。
+            scaler: 要使用的Scikit-learn缩放器类。
+            columns: 将被缩放的列列表。
+            scaler_kwargs: 所选缩放器的关键字参数。
         """
         self.scalers = {}  # dictionary with scalers
         self.by = by
@@ -65,35 +64,35 @@ class GroupByScaler(BaseEstimator, TransformerMixin):
         self.scaler_kwargs = {} if scaler_kwargs is None else scaler_kwargs
 
     def fit(self, X, y=None):
-        """Fits the scaler to input data.
+        """将缩放器拟合到输入数据。
 
-        Args:
-            X: DataFrame to fit.
-            y: Not used.
+        参数：
+            X: 要拟合的DataFrame。
+            y: 未使用。
 
-        Returns:
-            Fitted GroupBy scaler.
+        返回：
+            拟合的GroupBy缩放器。
         """
-        # if columns aren't specified, considered all numeric columns
+        # 如果未指定列，考虑所有数值列
         if self.columns is None:
             self.columns = X.select_dtypes(exclude=["object"]).columns
-        # fit one scaler for each group
+        # 为每个组拟合一个缩放器
         for value in X[self.by].unique():
             X_group = X.loc[X[self.by] == value, self.columns]
             self.scalers[value] = self.scaler(**self.scaler_kwargs).fit(X_group)
         return self
 
     def transform(self, X, y=None):
-        """Transforms unscaled data.
+        """转换未缩放的数据。
 
-        Args:
-            X: DataFrame to transform.
-            y: Not used.
+        参数：
+            X: 要转换的DataFrame。
+            y: 未使用。
 
-        Returns:
-            Transformed DataFrame.
+        返回：
+            转换后的DataFrame。
         """
-        # apply scaler for each group
+        # 对每个组应用缩放器
         X = X.copy()
         for value in X[self.by].unique():
             select_mask = X[self.by] == value
@@ -104,23 +103,23 @@ class GroupByScaler(BaseEstimator, TransformerMixin):
 
 
 class FeatureEngineer:
-    """Provides methods for preprocessing the stock price data
+    """提供预处理股票价格数据的方法
 
-    Attributes
+    属性
     ----------
         use_technical_indicator : boolean
-            we technical indicator or not
+            是否使用技术指标
         tech_indicator_list : list
-            a list of technical indicator names (modified from neofinrl_config.py)
+            技术指标名称列表（从neofinrl_config.py修改）
         use_turbulence : boolean
-            use turbulence index or not
+            是否使用湍流指数
         user_defined_feature:boolean
-            use user defined features or not
+            是否使用用户定义的特征
 
-    Methods
+    方法
     -------
     preprocess_data()
-        main method to do the feature engineering
+        进行特征工程的主要方法
 
     """
 
@@ -139,11 +138,11 @@ class FeatureEngineer:
         self.user_defined_feature = user_defined_feature
 
     def preprocess_data(self, df):
-        """main method to do the feature engineering
-        @:param config: source dataframe
-        @:return: a DataMatrices object
+        """进行特征工程的主要方法
+        @:param config: 源数据帧
+        @:return: DataMatrices对象
         """
-        # clean data
+        # 清理数据
         df = self.clean_data(df)
 
         # add technical indicators using stockstats

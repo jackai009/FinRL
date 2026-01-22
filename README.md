@@ -2,7 +2,7 @@
 <img align="center" width="30%" alt="image" src="https://github.com/AI4Finance-Foundation/FinGPT/assets/31713746/e0371951-1ce1-488e-aa25-0992dafcc139">
 </div>
 
-# FinRL®: Financial Reinforcement Learning [![twitter][1.1]][1] [![facebook][1.2]][2] [![google+][1.3]][3] [![linkedin][1.4]][4]
+# FinRL®: 金融强化学习 [![twitter][1.1]][1] [![facebook][1.2]][2] [![google+][1.3]][3] [![linkedin][1.4]][4]
 
 [1.1]: http://www.tensorlet.org/wp-content/uploads/2021/01/button_twitter_22x22.png
 [1.2]: http://www.tensorlet.org/wp-content/uploads/2021/01/facebook-button_22x22.png
@@ -40,47 +40,47 @@
 
 
 
-**Financial reinforcement learning (FinRL®)** ([Document website](https://finrl.readthedocs.io/en/latest/index.html)) is **the first open-source framework** for financial reinforcement learning. FinRL has evolved into an **ecosystem**
-* [FinRL-DeepSeek](https://github.com/AI4Finance-Foundation/FinRL_DeepSeek): LLM-Infused Risk-Sensitive Reinforcement Learning for Trading Agents
+**金融强化学习（FinRL®）** ([文档网站](https://finrl.readthedocs.io/en/latest/index.html)) 是**第一个金融强化学习开源框架**。FinRL已经发展成为一个**生态系统**
+* [FinRL-DeepSeek](https://github.com/AI4Finance-Foundation/FinRL_DeepSeek): 面向交易智能体的LLM融合风险敏感强化学习
 
-| Dev Roadmap  | Stage | Users | Project | Description |
+| 开发路线图  | 阶段 | 用户 | 项目 | 描述 |
 |----|----|----|----|----|
-| 0.0 (Preparation) | entrance | practitioners | [FinRL-Meta](https://github.com/AI4Finance-Foundation/FinRL-Meta)| gym-style market environments |
-| 1.0 (Proof-of-Concept)| full-stack | developers | [this repo](https://github.com/AI4Finance-Foundation/FinRL) | automatic pipeline |
-| 2.0 (Professional) | profession | experts | [ElegantRL](https://github.com/AI4Finance-Foundation/ElegantRL) | algorithms |
-| 3.0 (Production) | service | hedge funds | [Podracer](https://github.com/AI4Finance-Foundation/FinRL_Podracer) | cloud-native deployment |
+| 0.0 (准备) | 入口 | 从业者 | [FinRL-Meta](https://github.com/AI4Finance-Foundation/FinRL-Meta)| gym风格的市场环境 |
+| 1.0 (概念验证)| 全栈 | 开发者 | [本仓库](https://github.com/AI4Finance-Foundation/FinRL) | 自动化管道 |
+| 2.0 (专业) | 专业 | 专家 | [ElegantRL](https://github.com/AI4Finance-Foundation/ElegantRL) | 算法 |
+| 3.0 (生产) | 服务 | 对冲基金 | [Podracer](https://github.com/AI4Finance-Foundation/FinRL_Podracer) | 云原生部署 |
 
 
-## Outline
+## 大纲
 
-  - [Overview](#overview)
-  - [File Structure](#file-structure)
-  - [Supported Data Sources](#supported-data-sources)
-  - [Installation](#installation)
-  - [Status Update](#status-update)
-  - [Tutorials](#tutorials)
-  - [Publications](#publications)
-  - [News](#news)
-  - [Citing FinRL](#citing-finrl)
-  - [Join and Contribute](#join-and-contribute)
-    - [Contributors](#contributors)
-    - [Sponsorship](#sponsorship)
-  - [LICENSE](#license)
+  - [概述](#概述)
+  - [文件结构](#文件结构)
+  - [支持的数据源](#支持的数据源)
+  - [安装](#安装)
+  - [状态更新](#状态更新)
+  - [教程](#教程)
+  - [出版物](#出版物)
+  - [新闻](#新闻)
+  - [引用FinRL](#引用finrl)
+  - [加入和贡献](#加入和贡献)
+    - [贡献者](#贡献者)
+    - [Sponsorship](#赞助)
+  - [许可证](#许可证)
 
-## Overview
+## 概述
 
-FinRL has three layers: market environments, agents, and applications.  For a trading task (on the top), an agent (in the middle) interacts with a market environment (at the bottom), making sequential decisions.
+FinRL有三个层次：市场环境、智能体和应用。对于交易任务（顶层），智能体（中间层）与市场环境（底层）交互，做出顺序决策。
 
 <div align="center">
 <img align="center" src=figs/finrl_framework.png>
 </div>
 
-A quick start: Stock_NeurIPS2018.ipynb. Videos [FinRL](http://www.youtube.com/watch?v=ZSGJjtM-5jA) at [AI4Finance Youtube Channel](https://www.youtube.com/channel/UCrVri6k3KPBa3NhapVV4K5g).
+快速开始：Stock_NeurIPS2018.ipynb。视频 [FinRL](http://www.youtube.com/watch?v=ZSGJjtM-5jA) 在 [AI4Finance Youtube频道](https://www.youtube.com/channel/UCrVri6k3KPBa3NhapVV4K5g)。
 
 
-## File Structure
+## 文件结构
 
-The main folder **finrl** has three subfolders **applications, agents, meta**. We employ a **train-test-trade** pipeline with three files: train.py, test.py, and trade.py.
+主文件夹 **finrl** 有三个子文件夹 **applications, agents, meta**。我们采用 **训练-测试-交易** 管道，包含三个文件：train.py、test.py 和 trade.py。
 
 ```
 FinRL
@@ -125,9 +125,9 @@ FinRL
 └── README.md
 ```
 
-## Supported Data Sources
+## 支持的数据源
 
-|Data Source |Type |Range and Frequency |Request Limits|Raw Data|Preprocessed Data|
+|数据源 |类型 |范围与频率 |请求限制|原始数据|预处理数据|
 |  ----  |  ----  |  ----  |  ----  |  ----  |  ----  |
 |[Akshare](https://alpaca.markets/docs/introduction/)| CN Securities| 2015-now, 1day| Account-specific| OHLCV| Prices&Indicators|
 |[Alpaca](https://docs.alpaca.markets/docs/getting-started)| US Stocks, ETFs| 2015-now, 1min| Account-specific| OHLCV| Prices&Indicators|
@@ -182,49 +182,49 @@ FinRL
 
 
 
-OHLCV: open, high, low, and close prices; volume. adjusted_close: adjusted close price
+OHLCV: 开盘价、最高价、最低价和收盘价；成交量。adjusted_close: 调整后收盘价
 
-Technical indicators: 'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'dx_30', 'close_30_sma', 'close_60_sma'. Users also can add new features.
+技术指标：'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'dx_30', 'close_30_sma', 'close_60_sma'。用户也可以添加新特征。
 
 
-## Installation
-+ [Install description for all operating systems (MAC OS, Ubuntu, Windows 10)](./docs/source/start/installation.rst)
-+ [FinRL for Quantitative Finance: Install and Setup Tutorial for Beginners](https://ai4finance.medium.com/finrl-for-quantitative-finance-install-and-setup-tutorial-for-beginners-1db80ad39159)
+## 安装
++ [所有操作系统的安装说明（MAC OS、Ubuntu、Windows 10）](./docs/source/start/installation.rst)
++ [面向量化金融的FinRL：初学者安装和设置教程](https://ai4finance.medium.com/finrl-for-quantitative-finance-install-and-setup-tutorial-for-beginners-1db80ad39159)
 
-## Status Update
-<details><summary><b>Version History</b> <i>[click to expand]</i></summary>
+## 状态更新
+<details><summary><b>版本历史</b> <i>[点击展开]</i></summary>
 <div>
 
 * 2022-06-25
-	0.3.5: Formal release of FinRL, neo_finrl is chenged to FinRL-Meta with related files in directory: *meta*.
+	0.3.5: FinRL的正式版本，neo_finrl更名为FinRL-Meta，相关文件在目录：*meta*中。
 * 2021-08-25
-	0.3.1: pytorch version with a three-layer architecture, apps (financial tasks), drl_agents (drl algorithms), neo_finrl (gym env)
+	0.3.1: 具有三层架构的pytorch版本，apps（金融任务）、drl_agents（深度强化学习算法）、neo_finrl（gym环境）
 * 2020-12-14
-  	Upgraded to **Pytorch** with stable-baselines3; Remove tensorflow 1.0 at this moment, under development to support tensorflow 2.0
+  	升级到 **Pytorch** 并使用stable-baselines3；暂时移除tensorflow 1.0，正在开发支持tensorflow 2.0
 * 2020-11-27
-  	0.1: Beta version with tensorflow 1.5
+  	0.1: 使用tensorflow 1.5的测试版本
 </div>
 </details>
 
 
-## Tutorials
+## 教程
 
-+ [Towardsdatascience] [Deep Reinforcement Learning for Automated Stock Trading](https://towardsdatascience.com/deep-reinforcement-learning-for-automated-stock-trading-f1dad0126a02)
++ [Towardsdatascience] [自动化股票交易的深度强化学习](https://towardsdatascience.com/deep-reinforcement-learning-for-automated-stock-trading-f1dad0126a02)
 
 
-## Publications
+## 出版物
 
-|Title |Conference/Journal |Link|Citations|Year|
+|标题 |会议/期刊 |链接|引用|年份|
 |  ----  |  ----  |  ----  |  ----  |  ----  |
-|Dynamic Datasets and Market Environments for Financial Reinforcement Learning| Machine Learning - Springer Nature| [paper](https://arxiv.org/abs/2304.13174) [code](https://github.com/AI4Finance-Foundation/FinRL-Meta) | 7 | 2024 |
-|**FinRL-Meta**: FinRL-Meta: Market Environments and Benchmarks for Data-Driven Financial Reinforcement Learning| NeurIPS 2022| [paper](https://arxiv.org/abs/2211.03107) [code](https://github.com/AI4Finance-Foundation/FinRL-Meta) | 37 | 2022 |
-|**FinRL**: Deep reinforcement learning framework to automate trading in quantitative finance| ACM International Conference on AI in Finance (ICAIF) | [paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3955949) | 49 | 2021 |
-|**FinRL**: A deep reinforcement learning library for automated stock trading in quantitative finance| NeurIPS 2020 Deep RL Workshop  | [paper](https://arxiv.org/abs/2011.09607) | 87 | 2020 |
-|Deep reinforcement learning for automated stock trading: An ensemble strategy| ACM International Conference on AI in Finance (ICAIF) | [paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3690996) [code](https://github.com/AI4Finance-Foundation/FinRL-Meta/blob/master/tutorials/2-Advance/FinRL_Ensemble_StockTrading_ICAIF_2020/FinRL_Ensemble_StockTrading_ICAIF_2020.ipynb) | 154 | 2020 |
-|Practical deep reinforcement learning approach for stock trading | NeurIPS 2018 Workshop on Challenges and Opportunities for AI in Financial Services| [paper](https://arxiv.org/abs/1811.07522) [code](https://github.com/AI4Finance-Foundation/DQN-DDPG_Stock_Trading](https://github.com/AI4Finance-Foundation/FinRL/tree/master/examples))| 164 | 2018 |
+|金融强化学习的动态数据集和市场环境| Machine Learning - Springer Nature| [论文](https://arxiv.org/abs/2304.13174) [代码](https://github.com/AI4Finance-Foundation/FinRL-Meta) | 7 | 2024 |
+|**FinRL-Meta**: 面向数据驱动的金融强化学习的市场环境和基准| NeurIPS 2022| [论文](https://arxiv.org/abs/2211.03107) [代码](https://github.com/AI4Finance-Foundation/FinRL-Meta) | 37 | 2022 |
+|**FinRL**: 量化金融中自动化交易的深度强化学习框架| ACM国际金融AI会议 (ICAIF) | [论文](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3955949) | 49 | 2021 |
+|**FinRL**: 量化金融中自动化股票交易的深度强化学习库| NeurIPS 2020 深度强化学习研讨会  | [论文](https://arxiv.org/abs/2011.09607) | 87 | 2020 |
+|深度强化学习用于自动化股票交易：集成策略| ACM国际金融AI会议 (ICAIF) | [论文](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3690996) [代码](https://github.com/AI4Finance-Foundation/FinRL-Meta/blob/master/tutorials/2-Advance/FinRL_Ensemble_StockTrading_ICAIF_2020/FinRL_Ensemble_StockTrading_ICAIF_2020.ipynb) | 154 | 2020 |
+|股票交易的实用深度强化学习方法 | NeurIPS 2018 金融AI服务挑战与机遇研讨会| [论文](https://arxiv.org/abs/1811.07522) [代码](https://github.com/AI4Finance-Foundation/DQN-DDPG_Stock_Trading](https://github.com/AI4Finance-Foundation/FinRL/tree/master/examples))| 164 | 2018 |
 
 
-## News
+## 新闻
 + [央广网] [2021 IDEA大会于福田圆满落幕：群英荟萃论道AI 多项目发布亮点纷呈](http://tech.cnr.cn/techph/20211123/t20211123_525669092.shtml)
 + [央广网] [2021 IDEA大会开启AI思想盛宴 沈向洋理事长发布六大前沿产品](https://baijiahao.baidu.com/s?id=1717101783873523790&wfr=spider&for=pc)
 + [IDEA新闻] [2021 IDEA大会发布产品FinRL-Meta——基于数据驱动的强化学习金融风险模拟系统](https://idea.edu.cn/news/20211213143128.html)
@@ -243,7 +243,7 @@ Technical indicators: 'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'dx_30', 'close_30
 + [知乎] [FinRL的W&B化+超参数搜索和模型优化(基于Stable Baselines 3）](https://zhuanlan.zhihu.com/p/498115373)
 + [知乎] [FinRL-Meta: 未来金融强化学习的元宇宙](https://zhuanlan.zhihu.com/p/544621882)
 +
-## Citing FinRL
+## 引用FinRL
 
 ```
 @article{dynamic_datasets,
@@ -292,25 +292,25 @@ Technical indicators: 'macd', 'boll_ub', 'boll_lb', 'rsi_30', 'dx_30', 'close_30
 }
 ```
 
-We published [FinRL papers](http://tensorlet.org/projects/ai-in-finance/) that are listed at [Google Scholar](https://scholar.google.com/citations?view_op=list_works&hl=en&hl=en&user=XsdPXocAAAAJ). Previous papers are given in the [list](https://github.com/AI4Finance-Foundation/FinRL/blob/master/tutorials/FinRL_papers.md).
+我们发表了[FinRL论文](http://tensorlet.org/projects/ai-in-finance/)，这些论文列在[谷歌学术](https://scholar.google.com/citations?view_op=list_works&hl=en&hl=en&user=XsdPXocAAAAJ)上。之前的论文在[列表](https://github.com/AI4Finance-Foundation/FinRL/blob/master/tutorials/FinRL_papers.md)中给出。
 
 
-## Join and Contribute
+## 加入和贡献
 
-Welcome to **AI4Finance** community!
+欢迎来到 **AI4Finance** 社区！
 
-Please check [Contributing Guidances](https://github.com/AI4Finance-Foundation/FinRL-Tutorials/blob/master/Contributing.md).
+请查看[贡献指南](https://github.com/AI4Finance-Foundation/FinRL-Tutorials/blob/master/Contributing.md)。
 
-### Contributors
+### 贡献者
 
-Thank you!
+谢谢！
 
 <a href="https://github.com/AI4Finance-LLC/FinRL-Library/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=AI4Finance-LLC/FinRL-Library" />
 </a>
 
 
-## LICENSE
+## 许可证
 
 MIT License
 ```
@@ -323,4 +323,4 @@ For trademark inquiries or permissions, please contact: contact@finrl.ai
 
 ```
 
-**Disclaimer: We are sharing codes for academic purpose under the MIT education license. Nothing herein is financial advice, and NOT a recommendation to trade real money. Please use common sense and always first consult a professional before trading or investing.**
+**免责声明：我们出于学术目的在MIT教育许可证下分享代码。本文中的任何内容都不构成财务建议，也不是交易真钱的推荐。请使用常识，并在交易或投资前始终首先咨询专业人士。**

@@ -1,9 +1,9 @@
-This folder has three subfolders:
-+ applications: trading tasks,
-+ agents: DRL algorithms, from ElegantRL, RLlib, or Stable Baselines 3 (SB3). Users can plug in any DRL lib and play.
-+ meta: market environments, we merge the stable ones from the active [FinRL-Meta repo](https://github.com/AI4Finance-Foundation/FinRL-Meta).
+这个文件夹有三个子文件夹：
++ applications: 交易任务，
++ agents: DRL算法，来自ElegantRL、RLlib或Stable Baselines 3 (SB3)。用户可以插入任何DRL库进行尝试。
++ meta: 市场环境，我们合并了来自活跃的[FinRL-Meta仓库](https://github.com/AI4Finance-Foundation/FinRL-Meta)的稳定版本。
 
-Then, we employ a train-test-trade pipeline by three files: train.py, test.py, and trade.py.
+然后，我们通过三个文件采用训练-测试-交易管道：train.py、test.py和trade.py。
 
 ```
 FinRL

@@ -6,8 +6,8 @@ TRAINED_MODEL_DIR = "trained_models"
 TENSORBOARD_LOG_DIR = "tensorboard_log"
 RESULTS_DIR = "results"
 
-# date format: '%Y-%m-%d'
-TRAIN_START_DATE = "2014-01-06"  # bug fix: set Monday right, start date set 2014-01-01 ValueError: all the input array dimensions for the concatenation axis must match exactly, but along dimension 0, the array at index 0 has size 1658 and the array at index 1 has size 1657
+# 日期格式: '%Y-%m-%d'
+TRAIN_START_DATE = "2014-01-06"  # 错误修复：正确设置星期一，开始日期设置为2014-01-01 值错误：沿维度0连接轴的所有输入数组维度必须完全匹配，但索引0处的数组大小为1658，索引1处的数组大小为1657
 TRAIN_END_DATE = "2020-07-31"
 
 TEST_START_DATE = "2020-08-01"
@@ -16,8 +16,8 @@ TEST_END_DATE = "2021-10-01"
 TRADE_START_DATE = "2021-11-01"
 TRADE_END_DATE = "2021-12-01"
 
-# stockstats technical indicator column names
-# check https://pypi.org/project/stockstats/ for different names
+# stockstats技术指标列名
+# 查看https://pypi.org/project/stockstats/获取不同的名称
 INDICATORS = [
     "macd",
     "boll_ub",
@@ -30,7 +30,7 @@ INDICATORS = [
 ]
 
 
-# Model Parameters
+# 模型参数
 A2C_PARAMS = {"n_steps": 5, "ent_coef": 0.01, "learning_rate": 0.0007}
 PPO_PARAMS = {
     "n_steps": 2048,

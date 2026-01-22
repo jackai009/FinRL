@@ -5,7 +5,7 @@
 
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
-Welcome to FinRL Library!
+欢迎来到FinRL库！
 =====================================================================================================
 
 .. meta::
@@ -15,21 +15,21 @@ Welcome to FinRL Library!
 .. image:: image/logo_transparent_background.png
    :target:  https://github.com/AI4Finance-Foundation/FinRL
 
-**Disclaimer: Nothing herein is financial advice, and NOT a recommendation to trade real money. Please use common sense and always first consult a professional before trading or investing.**
+**免责声明：本文中的任何内容都不构成财务建议，也不是交易真钱的推荐。请使用常识，并在交易或投资前始终首先咨询专业人士。**
 
-**AI4Finance** community provides this demonstrative and educational resource, in order to efficiently automate trading. FinRL is the first open source framework for financial reinforcement learning.
-
-.. _FinRL: https://github.com/AI4Finance-Foundation/FinRL
-
-Reinforcement learning (RL) trains an agent to solve tasks by trial and error, while DRL uses deep neural networks as function approximators. DRL balances exploration (of uncharted territory) and exploitation (of current knowledge), and has been recognized as a competitive edge for automated trading. DRL framework is powerful in solving dynamic decision making problems by learning through interactions with an unknown environment, thus exhibiting two major advantages: portfolio scalability and market model independence. Automated trading is essentially making dynamic decisions, namely **to decide where to trade, at what price, and what quantity**, over a highly stochastic and complex stock market. Taking many complex financial factors into account, DRL trading agents build a multi-factor model and provide algorithmic trading strategies, which are difficult for human traders.
-
-`FinRL`_ provides a framework that supports various markets, SOTA DRL algorithms, benchmarks of many quant finance tasks, live trading, etc.
+**AI4Finance** 社区提供这个演示性和教育资源，以便有效地自动化交易。FinRL是第一个用于金融强化学习的开源框架。
 
 .. _FinRL: https://github.com/AI4Finance-Foundation/FinRL
 
-Join or discuss FinRL with us: `AI4Finance mailing list <https://groups.google.com/u/1/g/ai4finance>`_.
+强化学习（RL）通过试错训练智能体解决问题，而DRL使用深度神经网络作为函数逼近器。DRL平衡了探索（未知领域）和利用（当前知识），并被认为是自动化交易的竞争优势。DRL框架通过与未知环境的交互学习来解决动态决策问题，从而展现出两大优势：投资组合可扩展性和市场模型独立性。自动化交易本质上是做出动态决策，即在高度随机和复杂的股票市场上**决定在哪里交易、以什么价格交易以及交易什么数量**。考虑到许多复杂的金融因素，DRL交易智能体构建多因子模型并提供算法交易策略，这对人类交易员来说是困难的。
 
-Feel free to leave us feedback: report bugs using `Github issues`_ or discuss FinRL development in the Slack Channel.
+`FinRL`_ 提供了一个支持各种市场、SOTA DRL算法、许多量化金融任务基准、实时交易等的框架。
+
+.. _FinRL: https://github.com/AI4Finance-Foundation/FinRL
+
+加入或与我们讨论FinRL：`AI4Finance邮件列表 <https://groups.google.com/u/1/g/ai4finance>`_。
+
+欢迎随时给我们反馈：使用`Github问题 <https://github.com/AI4Finance-LLC/FinRL-Library/issues>`_ 报告错误，或在Slack频道讨论FinRL开发。
 
 .. _Github issues: https://github.com/AI4Finance-LLC/FinRL-Library/issues
 
@@ -49,7 +49,13 @@ Feel free to leave us feedback: report bugs using `Github issues`_ or discuss Fi
 
 .. toctree::
    :maxdepth: 1
-   :caption: Getting Started
+   :caption: 入门指南
+
+   start/introduction
+   start/first_glance
+   start/three_layer
+   start/installation
+   start/quick_start
 
    start/introduction
    start/first_glance
@@ -71,7 +77,7 @@ Feel free to leave us feedback: report bugs using `Github issues`_ or discuss Fi
 
 .. toctree::
    :maxdepth: 3
-   :caption: Tutorials
+   :caption: 教程
 
    tutorial/Guide
    tutorial/Homegrown_example
@@ -84,7 +90,7 @@ Feel free to leave us feedback: report bugs using `Github issues`_ or discuss Fi
 
 .. toctree::
    :maxdepth: 1
-   :caption: Developer Guide
+   :caption: 开发者指南
 
    developer_guide/file_architecture
    developer_guide/development_setup
@@ -93,7 +99,7 @@ Feel free to leave us feedback: report bugs using `Github issues`_ or discuss Fi
 
 .. toctree::
    :maxdepth: 1
-   :caption: Reference
+   :caption: 参考
 
    reference/publication
    reference/reference.md
@@ -101,6 +107,6 @@ Feel free to leave us feedback: report bugs using `Github issues`_ or discuss Fi
 
 .. toctree::
    :maxdepth: 2
-   :caption: FAQ
+   :caption: 常见问题
 
    faq

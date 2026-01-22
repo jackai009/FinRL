@@ -2,8 +2,8 @@ from __future__ import annotations
 
 SINGLE_TICKER = ["AAPL"]
 
-# Dow 30 constituents in 2021/10
-# check https://wrds-www.wharton.upenn.edu/ for U.S. index constituents
+# 道琼斯30成分股 2021/10
+# 查看https://wrds-www.wharton.upenn.edu/ 获取美国指数成分股
 DOW_30_TICKER = [
     "AXP",
     "AMGN",
@@ -37,7 +37,7 @@ DOW_30_TICKER = [
     "DOW",
 ]
 
-# Nasdaq 100 constituents at 2019/01
+# 纳斯达克100成分股 2019/01
 NAS_100_TICKER = [
     "AMGN",
     "AAPL",

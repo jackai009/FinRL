@@ -1,6 +1,4 @@
-"""Contains methods and classes to collect data from
-Yahoo Finance API
-"""
+"""包含从Yahoo Finance API收集数据的方法和类"""
 
 from __future__ import annotations
 
@@ -9,22 +7,21 @@ import yfinance as yf
 
 
 class YahooDownloader:
-    """Provides methods for retrieving daily stock data from
-    Yahoo Finance API
+    """提供从Yahoo Finance API检索日股票数据的方法
 
-    Attributes
+    属性
     ----------
         start_date : str
-            start date of the data (modified from neofinrl_config.py)
+            数据的开始日期（从neofinrl_config.py修改）
         end_date : str
-            end date of the data (modified from neofinrl_config.py)
+            数据的结束日期（从neofinrl_config.py修改）
         ticker_list : list
-            a list of stock tickers (modified from neofinrl_config.py)
+            股票代码列表（从neofinrl_config.py修改）
 
-    Methods
+    方法
     -------
     fetch_data()
-        Fetches data from yahoo API
+        从yahoo API获取数据
 
     """
 
@@ -34,15 +31,15 @@ class YahooDownloader:
         self.ticker_list = ticker_list
 
     def fetch_data(self, proxy=None, auto_adjust=False) -> pd.DataFrame:
-        """Fetches data from Yahoo API
-        Parameters
+        """从Yahoo API获取数据
+        参数
         ----------
 
-        Returns
+        返回
         -------
         `pd.DataFrame`
-            7 columns: A date, open, high, low, close, volume and tick symbol
-            for the specified stock ticker
+            7列：日期、开盘价、最高价、最低价、收盘价、成交量和股票代码
+            用于指定的股票代码
         """
         # Download and save the data in a pandas DataFrame:
         data_df = pd.DataFrame()
@@ -102,12 +99,12 @@ class YahooDownloader:
         return data_df
 
     def _adjust_prices(self, data_df: pd.DataFrame) -> pd.DataFrame:
-        # use adjusted close price instead of close price
+        # 使用调整后的收盘价而不是收盘价
         data_df["adj"] = data_df["adjcp"] / data_df["close"]
         for col in ["open", "high", "low", "close"]:
             data_df[col] *= data_df["adj"]
 
-        # drop the adjusted close price column
+        # 删除调整后的收盘价列
         return data_df.drop(["adjcp", "adj"], axis=1)
 
     def select_equal_rows_stock(self, df):

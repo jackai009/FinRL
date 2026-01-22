@@ -1,4 +1,4 @@
-# DRL models from Stable Baselines 3
+# 来自Stable Baselines 3的DRL模型
 from __future__ import annotations
 
 import statistics
@@ -33,7 +33,7 @@ NOISE = {
 
 class TensorboardCallback(BaseCallback):
     """
-    Custom callback for plotting additional values in tensorboard.
+    用于在tensorboard中绘制额外值的自定义回调。
     """
 
     def __init__(self, verbose=0):
@@ -48,9 +48,9 @@ class TensorboardCallback(BaseCallback):
                 self.logger.record(key="train/reward", value=self.locals["reward"][0])
 
             except BaseException as inner_error:
-                # Handle the case where neither "rewards" nor "reward" is found
+                # 处理找不到"rewards"或"reward"的情况
                 self.logger.record(key="train/reward", value=None)
-                # Print the original error and the inner error for debugging
+                # 打印原始错误和内部错误以进行调试
                 print("Original Error:", error)
                 print("Inner Error:", inner_error)
         return True
@@ -68,31 +68,31 @@ class TensorboardCallback(BaseCallback):
                 key="train/reward_max", value=max(rollout_buffer_rewards)
             )
         except BaseException as error:
-            # Handle the case where "rewards" is not found
+            # 处理找不到"rewards"的情况
             self.logger.record(key="train/reward_min", value=None)
             self.logger.record(key="train/reward_mean", value=None)
             self.logger.record(key="train/reward_max", value=None)
-            print("Logging Error:", error)
+            print("日志记录错误:", error)
         return True
 
 
 class DRLAgent:
-    """Provides implementations for DRL algorithms
+    """提供DRL算法的实现
 
-    Attributes
+    属性
     ----------
-        env: gym environment class
-            user-defined class
+        env: gym环境类
+            用户定义的类
 
-    Methods
+    方法
     -------
         get_model()
-            setup DRL algorithms
+            设置DRL算法
         train_model()
-            train DRL algorithms in a train dataset
-            and output the trained model
+            在训练数据集中训练DRL算法
+            并输出训练后的模型
         DRL_prediction()
-            make a prediction in a test dataset and get results
+            在测试数据集中进行预测并获得结果
     """
 
     def __init__(self, env):
@@ -138,7 +138,7 @@ class DRLAgent:
         tb_log_name,
         total_timesteps=5000,
         callbacks: Type[BaseCallback] = None,
-    ):  # this function is static method, so it can be called without creating an instance of the class
+    ):  # 这个函数是静态方法，因此可以在不创建类实例的情况下调用
         model = model.learn(
             total_timesteps=total_timesteps,
             tb_log_name=tb_log_name,
@@ -154,11 +154,11 @@ class DRLAgent:
 
     @staticmethod
     def DRL_prediction(model, environment, deterministic=True):
-        """make a prediction and get results"""
+        """进行预测并获得结果"""
         test_env, test_obs = environment.get_sb_env()
-        account_memory = None  # This help avoid unnecessary list creation
-        actions_memory = None  # optimize memory consumption
-        # state_memory=[] #add memory pool to store states
+        account_memory = None  # 这有助于避免不必要的列表创建
+        actions_memory = None  # 优化内存消耗
+        # state_memory=[] #添加内存池来存储状态
 
         test_env.reset()
         max_steps = len(environment.df.index.unique()) - 1
@@ -171,14 +171,14 @@ class DRLAgent:
 
             if (
                 i == max_steps - 1
-            ):  # more descriptive condition for early termination to clarify the logic
+            ):  # 更描述性的提前终止条件以阐明逻辑
                 account_memory = test_env.env_method(method_name="save_asset_memory")
                 actions_memory = test_env.env_method(method_name="save_action_memory")
-            # add current state to state memory
+            # 将当前状态添加到状态内存
             # state_memory=test_env.env_method(method_name="save_state_memory")
 
             if dones[0]:
-                print("hit end!")
+                print("到达终点!")
                 break
         return account_memory[0], actions_memory[0]
 
@@ -187,17 +187,17 @@ class DRLAgent:
         if model_name not in MODELS:
             raise ValueError(
                 f"Model '{model_name}' not found in MODELS."
-            )  # this is more informative than NotImplementedError("NotImplementedError")
+            )  # 这比NotImplementedError("NotImplementedError")更具信息性
         try:
-            # load agent
+            # 加载智能体
             model = MODELS[model_name].load(cwd)
-            print("Successfully load model", cwd)
+            print("成功加载模型", cwd)
         except BaseException as error:
-            raise ValueError(f"Failed to load agent. Error: {str(error)}") from error
+            raise ValueError(f"加载智能体失败。错误: {str(error)}") from error
 
-        # test on the testing env
+        # 在测试环境中测试
         state = environment.reset()
-        episode_returns = []  # the cumulative_return / initial_account
+        episode_returns = []  # 累计收益 / 初始账户
         episode_total_assets = [environment.initial_total_asset]
         done = False
         while not done:
@@ -213,7 +213,7 @@ class DRLAgent:
             episode_returns.append(episode_return)
 
         print("episode_return", episode_return)
-        print("Test Finished!")
+        print("测试完成!")
         return episode_total_assets
 
 
@@ -281,11 +281,11 @@ class DRLEnsembleAgent:
 
     @staticmethod
     def get_validation_sharpe(iteration, model_name):
-        """Calculate Sharpe ratio based on validation results"""
+        """基于验证结果计算夏普比率"""
         df_total_value = pd.read_csv(
             f"results/account_value_validation_{model_name}_{iteration}.csv"
         )
-        # If the agent did not make any transaction
+        # 如果智能体没有进行任何交易
         if df_total_value["daily_return"].var() == 0:
             if df_total_value["daily_return"].mean() > 0:
                 return np.inf
@@ -336,10 +336,10 @@ class DRLEnsembleAgent:
         self.action_space = action_space
         self.tech_indicator_list = tech_indicator_list
         self.print_verbosity = print_verbosity
-        self.train_env = None  # defined in train_validation() function
+        self.train_env = None  # 在train_validation()函数中定义
 
     def DRL_validation(self, model, test_data, test_env, test_obs):
-        """validation process"""
+        """验证过程"""
         for _ in range(len(test_data.index.unique())):
             action, _states = model.predict(test_obs)
             test_obs, rewards, dones, info = test_env.step(action)
@@ -347,9 +347,9 @@ class DRLEnsembleAgent:
     def DRL_prediction(
         self, model, name, last_state, iter_num, turbulence_threshold, initial
     ):
-        """make a prediction based on trained model"""
+        """基于训练好的模型进行预测"""
 
-        # trading env
+        # 交易环境
         trade_data = data_split(
             self.df,
             start=self.unique_trade_date[iter_num - self.rebalance_window],

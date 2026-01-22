@@ -1,4 +1,4 @@
-# DRL models from RLlib
+# 来自RLlib的DRL模型
 from __future__ import annotations
 
 import ray
@@ -15,27 +15,27 @@ MODELS = {"a2c": a2c, "ddpg": ddpg, "td3": td3, "sac": sac, "ppo": ppo}
 
 
 class DRLAgent:
-    """Implementations for DRL algorithms
+    """DRL算法的实现
 
-    Attributes
+    属性
     ----------
-        env: gym environment class
-            user-defined class
-        price_array: numpy array
-            OHLC data
-        tech_array: numpy array
-            techical data
-        turbulence_array: numpy array
-            turbulence/risk data
-    Methods
+        env: gym环境类
+            用户定义的类
+        price_array: numpy数组
+            OHLC数据
+        tech_array: numpy数组
+            技术指标数据
+        turbulence_array: numpy数组
+            湍流/风险数据
+    方法
     -------
         get_model()
-            setup DRL algorithms
+            设置DRL算法
         train_model()
-            train DRL algorithms in a train dataset
-            and output the trained model
+            在训练数据集中训练DRL算法
+            并输出训练后的模型
         DRL_prediction()
-            make a prediction in a test dataset and get results
+            在测试数据集中进行预测并获得结果
     """
 
     def __init__(self, env, price_array, tech_array, turbulence_array):
@@ -58,14 +58,14 @@ class DRLAgent:
         #    model_kwargs = MODEL_KWARGS[model_name]
 
         model = MODELS[model_name]
-        # get algorithm default configration based on algorithm in RLlib
+        # 基于RLlib中的算法获取算法默认配置
         if model_name == "a2c":
             model_config = model.A2C_DEFAULT_CONFIG.copy()
         elif model_name == "td3":
             model_config = model.TD3_DEFAULT_CONFIG.copy()
         else:
             model_config = model.DEFAULT_CONFIG.copy()
-        # pass env, log_level, price_array, tech_array, and turbulence_array to config
+        # 将env、log_level、price_array、tech_array和turbulence_array传递给配置
         model_config["env"] = self.env
         model_config["log_level"] = "WARN"
         model_config["env_config"] = {
@@ -85,7 +85,7 @@ class DRLAgent:
         if init_ray:
             ray.init(
                 ignore_reinit_error=True
-            )  # Other Ray APIs will not work until `ray.init()` is called.
+            )  # 其他Ray API将无法工作，直到调用`ray.init()`。
 
         if model_name == "ppo":
             trainer = model.PPOTrainer(env=self.env, config=model_config)
@@ -103,7 +103,7 @@ class DRLAgent:
 
         ray.shutdown()
 
-        # save the trained model
+        # 保存训练好的模型
         cwd = "./test_" + str(model_name)
         trainer.save(cwd)
 
@@ -143,7 +143,7 @@ class DRLAgent:
         }
         env_instance = env(config=env_config)
 
-        # ray.init() # Other Ray APIs will not work until `ray.init()` is called.
+        # ray.init() # 其他Ray API将无法工作，直到调用`ray.init()`。
         if model_name == "ppo":
             trainer = MODELS[model_name].PPOTrainer(env=env, config=model_config)
         elif model_name == "a2c":
@@ -157,13 +157,13 @@ class DRLAgent:
 
         try:
             trainer.restore(agent_path)
-            print("Restoring from checkpoint path", agent_path)
+            print("从检查点路径恢复", agent_path)
         except BaseException:
-            raise ValueError("Fail to load agent!")
+            raise ValueError("加载智能体失败!")
 
-        # test on the testing env
+        # 在测试环境中测试
         state = env_instance.reset()
-        episode_returns = []  # the cumulative_return / initial_account
+        episode_returns = []  # 累计收益 / 初始账户
         episode_total_assets = [env_instance.initial_total_asset]
         done = False
         while not done:
@@ -179,5 +179,5 @@ class DRLAgent:
             episode_returns.append(episode_return)
         ray.shutdown()
         print("episode return: " + str(episode_return))
-        print("Test Finished!")
+        print("测试完成!")
         return episode_total_assets

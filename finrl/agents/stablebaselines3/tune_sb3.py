@@ -21,9 +21,9 @@ from finrl.plot import backtest_stats
 class LoggingCallback:
     def __init__(self, threshold: int, trial_number: int, patience: int):
         """
-        threshold:int tolerance for increase in sharpe ratio
-        trial_number: int Prune after minimum number of trials
-        patience: int patience for the threshold
+        threshold:int 夏普比率增加的容差
+        trial_number: int 在最少试验次数后剪枝
+        patience: int 阈值的耐心
         """
         self.threshold = threshold
         self.trial_number = trial_number
@@ -31,28 +31,28 @@ class LoggingCallback:
         self.cb_list = []  # Trials list for which threshold is reached
 
     def __call__(self, study: optuna.study, frozen_trial: optuna.Trial):
-        # Setting the best value in the current trial
+        # 在当前试验中设置最佳值
         study.set_user_attr("previous_best_value", study.best_value)
 
-        # Checking if the minimum number of trials have pass
+        # 检查是否已通过最少试验次数
         if frozen_trial.number > self.trial_number:
             previous_best_value = study.user_attrs.get("previous_best_value", None)
-            # Checking if the previous and current objective values have the same sign
+            # 检查先前和当前目标值是否具有相同的符号
             if previous_best_value * study.best_value >= 0:
-                # Checking for the threshold condition
+                # 检查阈值条件
                 if abs(previous_best_value - study.best_value) < self.threshold:
                     self.cb_list.append(frozen_trial.number)
-                    # If threshold is achieved for the patience amount of time
+                    # 如果阈值在耐心时间内达到
                     if len(self.cb_list) > self.patience:
-                        print("The study stops now...")
+                        print("研究现在停止...")
                         print(
-                            "With number",
+                            "编号为",
                             frozen_trial.number,
-                            "and value ",
+                            "值为 ",
                             frozen_trial.value,
                         )
                         print(
-                            "The previous and current best values are {} and {} respectively".format(
+                            "先前和当前的最佳值分别为 {} 和 {}".format(
                                 previous_best_value, study.best_value
                             )
                         )
@@ -61,21 +61,20 @@ class LoggingCallback:
 
 class TuneSB3Optuna:
     """
-    Hyperparameter tuning of SB3 agents using Optuna
+    使用Optuna进行SB3智能体的超参数调优
 
-    Attributes
+    属性
     ----------
-      env_train: Training environment for SB3
+      env_train: SB3的训练环境
       model_name: str
-      env_trade: testing environment
-      logging_callback: callback for tuning
+      env_trade: 测试环境
+      logging_callback: 调优的回调
       total_timesteps: int
-      n_trials: number of hyperparameter configurations
+      n_trials: 超参数配置的数量
 
-    Note:
-      The default sampler and pruner are used are
-      Tree Parzen Estimator and Hyperband Scheduler
-      respectively.
+    注意：
+      默认使用的采样器和剪枝器分别是
+      树Parzen估计器和超带调度器
     """
 
     def __init__(

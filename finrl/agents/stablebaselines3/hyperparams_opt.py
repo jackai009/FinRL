@@ -13,7 +13,7 @@ from utils import linear_schedule
 
 def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
     """
-    Sampler for PPO hyperparams.
+    PPO超参数的采样器。
 
     :param trial:
     :return:
@@ -27,7 +27,7 @@ def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
     )
     learning_rate = trial.suggest_loguniform("learning_rate", 1e-5, 1)
     lr_schedule = "constant"
-    # Uncomment to enable learning rate schedule
+    # 取消注释以启用学习率调度
     # lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
     ent_coef = trial.suggest_loguniform("ent_coef", 0.00000001, 0.1)
     clip_range = trial.suggest_categorical("clip_range", [0.1, 0.2, 0.3, 0.4])
@@ -40,25 +40,25 @@ def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
     )
     vf_coef = trial.suggest_uniform("vf_coef", 0, 1)
     net_arch = trial.suggest_categorical("net_arch", ["small", "medium"])
-    # Uncomment for gSDE (continuous actions)
+    # 取消注释以使用gSDE（连续动作）
     # log_std_init = trial.suggest_uniform("log_std_init", -4, 1)
-    # Uncomment for gSDE (continuous action)
+    # 取消注释以使用gSDE（连续动作）
     # sde_sample_freq = trial.suggest_categorical("sde_sample_freq", [-1, 8, 16, 32, 64, 128, 256])
-    # Orthogonal initialization
+    # 正交初始化
     ortho_init = False
     # ortho_init = trial.suggest_categorical('ortho_init', [False, True])
     # activation_fn = trial.suggest_categorical('activation_fn', ['tanh', 'relu', 'elu', 'leaky_relu'])
     activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu"])
 
-    # TODO: account when using multiple envs
+    # TODO: 考虑使用多个环境时的情况
     if batch_size > n_steps:
         batch_size = n_steps
 
     if lr_schedule == "linear":
         learning_rate = linear_schedule(learning_rate)
 
-    # Independent networks usually work best
-    # when not working with images
+    # 独立网络通常效果最好
+    # 当不使用图像时
     net_arch = {
         "small": [dict(pi=[64, 64], vf=[64, 64])],
         "medium": [dict(pi=[256, 256], vf=[256, 256])],
@@ -94,7 +94,7 @@ def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
 
 def sample_trpo_params(trial: optuna.Trial) -> dict[str, Any]:
     """
-    Sampler for TRPO hyperparams.
+    TRPO超参数的采样器。
 
     :param trial:
     :return:
@@ -108,7 +108,7 @@ def sample_trpo_params(trial: optuna.Trial) -> dict[str, Any]:
     )
     learning_rate = trial.suggest_loguniform("learning_rate", 1e-5, 1)
     lr_schedule = "constant"
-    # Uncomment to enable learning rate schedule
+    # 取消注释以启用学习率调度
     # lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
     # line_search_shrinking_factor = trial.suggest_categorical("line_search_shrinking_factor", [0.6, 0.7, 0.8, 0.9])
     n_critic_updates = trial.suggest_categorical(
@@ -123,25 +123,25 @@ def sample_trpo_params(trial: optuna.Trial) -> dict[str, Any]:
         "gae_lambda", [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0]
     )
     net_arch = trial.suggest_categorical("net_arch", ["small", "medium"])
-    # Uncomment for gSDE (continuous actions)
+    # 取消注释以使用gSDE（连续动作）
     # log_std_init = trial.suggest_uniform("log_std_init", -4, 1)
-    # Uncomment for gSDE (continuous action)
+    # 取消注释以使用gSDE（连续动作）
     # sde_sample_freq = trial.suggest_categorical("sde_sample_freq", [-1, 8, 16, 32, 64, 128, 256])
-    # Orthogonal initialization
+    # 正交初始化
     ortho_init = False
     # ortho_init = trial.suggest_categorical('ortho_init', [False, True])
     # activation_fn = trial.suggest_categorical('activation_fn', ['tanh', 'relu', 'elu', 'leaky_relu'])
     activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu"])
 
-    # TODO: account when using multiple envs
+    # TODO: 考虑使用多个环境时的情况
     if batch_size > n_steps:
         batch_size = n_steps
 
     if lr_schedule == "linear":
         learning_rate = linear_schedule(learning_rate)
 
-    # Independent networks usually work best
-    # when not working with images
+    # 独立网络通常效果最好
+    # 当不使用图像时
     net_arch = {
         "small": [dict(pi=[64, 64], vf=[64, 64])],
         "medium": [dict(pi=[256, 256], vf=[256, 256])],

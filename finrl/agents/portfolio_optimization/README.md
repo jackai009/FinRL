@@ -1,20 +1,20 @@
-# Portfolio Optimization Agents
+# 投资组合优化智能体
 
-This directory contains architectures and algorithms commonly used in portfolio optimization agents.
+此目录包含投资组合优化智能体中常用的架构和算法。
 
-To instantiate the model, it's necessary to have an instance of [PortfolioOptimizationEnv](/finrl/meta/env_portfolio_optimization/). In the example below, we use the `DRLAgent` class to instantiate a policy gradient ("pg") model. With the dictionary `model_kwargs`, we can set the `PolicyGradient` class parameters and, whith the dictionary `policy_kwargs`, it's possible to change the parameters of the chosen architecture.
+要实例化模型，必须有[PortfolioOptimizationEnv](/finrl/meta/env_portfolio_optimization/)的实例。在下面的示例中，我们使用`DRLAgent`类来实例化策略梯度（"pg"）模型。通过字典`model_kwargs`，我们可以设置`PolicyGradient`类参数，而通过字典`policy_kwargs`，可以更改所选架构的参数。
 
 ```python
 from finrl.agents.portfolio_optimization.models import DRLAgent
 from finrl.agents.portfolio_optimization.architectures import EIIE
 
-# set PolicyGradient algorithm arguments
+# 设置策略梯度算法参数
 model_kwargs = {
     "lr": 0.01,
     "policy": EIIE,
 }
 
-# set EIIE architecture arguments
+# 设置EIIE架构参数
 policy_kwargs = {
     "k_size": 4
 }
@@ -22,34 +22,34 @@ policy_kwargs = {
 model = DRLAgent(train_env).get_model("pg", model_kwargs, policy_kwargs)
 ```
 
-In the example below, the model is trained in 5 episodes (we define an episode as a complete period of the used environment).
+在下面的示例中，模型在5个回合中进行训练（我们将一个回合定义为所用环境的完整周期）。
 
 ```python
 DRLAgent.train_model(model, episodes=5)
 ```
 
-It's important that the architecture and the environment have the same `time_window` defined. By default, both of them use 50 timesteps as `time_window`. For more details about what is a time window, check this [article](https://doi.org/10.5753/bwaif.2023.231144).
+重要的是架构和环境具有相同的`time_window`定义。默认情况下，它们都使用50个时间步作为`time_window`。有关时间窗口的更多详细信息，请查看此[文章](https://doi.org/10.5753/bwaif.2023.231144)。
 
-### Policy Gradient Algorithm
+### 策略梯度算法
 
-The class `PolicyGradient` implements the Policy Gradient algorithm used in *Jiang et al* paper. This algorithm is inspired by DDPG (deep deterministic policy gradient), but there are a couple of differences:
-- DDPG is an actor-critic algorithm, so it has an actor and a critic neural network. The algorithm below, however, doesn't have a critic neural network and uses the portfolio value as value function: the policy will be updated to maximize the portfolio value.
-- DDPG usually makes use of a noise parameter in the action during training to create an exploratory behavior. PG algorithm, on the other hand, has a full-exploit approach.
-- DDPG randomly samples experiences from its replay buffer. The implemented policy gradient, however, samples a sequential batch of experiences in time, to make it possible to calculate the variation of the portfolio value in the batch and use it as value function.
+`PolicyGradient`类实现了*Jiang等人*论文中使用的策略梯度算法。该算法受到DDPG（深度确定性策略梯度）的启发，但有一些差异：
+- DDPG是演员-评论家算法，因此它有演员和评论家神经网络。然而，下面的算法没有评论家神经网络，而是使用投资组合价值作为价值函数：策略将被更新以最大化投资组合价值。
+- DDPG通常在训练期间在行动中使用噪声参数来创建探索行为。另一方面，PG算法采用完全开发的方法。
+- DDPG随机从其回放缓冲区中采样经验。然而，实施的策略梯度在时间上按顺序采样一批经验，以便能够计算批次中投资组合价值的变化并将其用作价值函数。
 
-The algorithm was implemented as follows:
-1. Initializes policy network and replay buffer;
-2. For each episode, do the following:
-    1. For each period of `batch_size` timesteps, do the following:
-        1. For each timestep, define an action to be performed, simulate the timestep and save the experiences in the replay buffer.
-        2. After `batch_size` timesteps are simulated, sample the replay buffer.
-        4. Calculate the value function: $V = \sum\limits_{t=1}^{batch\_size} ln(\mu_{t}(W_{t} \cdot P_{t}))$, where $W_{t}$ is the action performed at timestep t, $P_{t}$ is the price variation vector at timestep t and $\mu_{t}$ is the transaction remainder factor at timestep t. Check *Jiang et al* paper for more details.
-        5. Perform gradient ascent in the policy network.
-    2. If, in the and of episode, there is sequence of remaining experiences in the replay buffer, perform steps 1 to 5 with the remaining experiences.
+该算法的实施如下：
+1. 初始化策略网络和回放缓冲区；
+2. 对于每个回合，执行以下操作：
+    1. 对于`batch_size`时间步的每个周期，执行以下操作：
+        1. 对于每个时间步，定义要执行的行动，模拟时间步并将经验保存在回放缓冲区中。
+        2. 模拟`batch_size`时间步后，对回放缓冲区进行采样。
+        4. 计算价值函数：$V = \sum\limits_{t=1}^{batch\_size} ln(\mu_{t}(W_{t} \cdot P_{t}))$，其中$W_{t}$是在时间步t执行的行動，$P_{t}$是在时间步t的价格变化向量，$\mu_{t}$是在时间步t的交易剩余因子。查看*Jiang等人*论文以获取更多详细信息。
+        5. 在策略网络中执行梯度上升。
+    2. 如果在回合结束时，回放缓冲区中有一系列剩余的经验，请对剩余的经验执行步骤1至5。
 
-### References
+### 参考文献
 
-If you are using one of them in your research, you can use the following references.
+如果您在研究中使用其中一个，可以使用以下参考文献。
 
 #### EIIE Architecture and Policy Gradient algorithm
 
