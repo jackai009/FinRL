@@ -1,30 +1,30 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 =======================
-Introduction
+介绍
 =======================
 
 .. contents:: Table of Contents
     :depth: 2
 
-**Design Principles**
+**设计原则**
 
-- Plug-and-Play (PnP): modularity; handle different markets (say T0 vs. T+1).
-- Completeness and universal: multiple markets; various data sources (APIs, Excel, etc); user-friendly variables.
-- Avoid hard-coded parameters.
-- Closing the sim-real gap using the “training-testing-trading” pipeline: simulation for training and connecting real-time APIs for testing/trading.
-- Efficient data sampling: accelerate the data sampling process is the key to DRL training! From the ElegantRL project. We know that multi-processing is powerful to reduce the training time (scheduling between CPU + GPU).
-- Transparency: a virtual env that is invisible to the upper layer.
-- Flexibility and extensibility: inheritance might be helpful here.
-
-
-
-**Contributions**
+- 即插即用（PnP）：模块化；处理不同市场（例如T0与T+1）。
+- 完整性与通用性：多市场；各种数据源（API、Excel等）；用户友好的变量。
+- 避免硬编码参数。
+- 使用'training-testing-trading'管道缩小仿真与现实的差距：仿真用于训练，连接实时API用于测试/交易。
+- 高效数据采样：加速数据采样过程是DRL训练的关键！来自ElegantRL项目。我们知道多进程能有效减少训练时间（CPU和GPU之间的调度）。
+- 透明性：对上层不可见的虚拟环境。
+- 灵活性与可扩展性：继承可能对此有帮助。
 
 
-    - FinRL is an open source framework for financial reinforcement learning. Trading environments incorporating market frictions are provided.
-    - Trading tasks accompanied by hands-on tutorials are available in a beginner-friendly and reproducible fashion. Customization is feasible.
-    - FinRL has good scalability, with fine-tuned state-of-the-art DRL algorithms. Adjusting the implementations to the rapid changing stock market is well supported.
-    - Typical use cases are selected to establish benchmarks for the quantitative finance community. Standard backtesting and evaluation metrics are also provided for easy and effective performance evaluation.
 
-With FinRL library, the implementation of powerful DRL trading strategies becomes more accessible, efficient and delightful.
+**贡献**
+
+
+    - FinRL是一个用于金融强化学习的开源框架。提供了包含市场摩擦的交易环境。
+    - 交易任务配有实践教程，以适合初学者的可复现方式提供。可进行定制。
+    - FinRL具有良好的可扩展性，包含经过微调的最先进DRL算法。能够很好地支持快速变化的股票市场的实现调整。
+    - 选择典型用例为量化金融社区建立基准。还提供标准的回测和评估指标，便于进行有效性能评估。
+
+使用FinRL库，强大DRL交易策略的实现变得更加易于访问、高效且令人愉悦。

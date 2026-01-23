@@ -1,27 +1,27 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 =============================
-Background
+背景
 =============================
 
-Why FinRL-Meta?
+为什么需要FinRL-Meta？
 ================
 
-Finance is a particularly difficult playground for deep reinforcement learning (DRL). Some existing works already showed great potential of DRL in financial applications. However, establishing high-quality market environments and benchmarks on financial reinforcement learning are challenging and highly demanded. Thus, we proposed and started FinRL-Meta.
+金融是深度强化学习（DRL）的一个特别具有挑战性的领域。一些现有研究已经展示了DRL在金融应用中的巨大潜力。然而，为金融强化学习建立高质量的市场环境和基准既具有挑战性又需求迫切。因此，我们提出并启动了FinRL-Meta项目。
 
 
-Envrionments and Benchmarks
+环境与基准
 ===========================
 
-MuJoCo and OpenAI’s XLand are famous libraries in the RL area, they built environments for deep reinforcement learning in robotics, games, and common tasks that are widely used in RL academia and industry. However, they barely provide any high quality environments for financial tasks. FinRL-Meta, previously called Neo-FinRL (near real market environments for data driven financial RL), are working to provide hundreds of market environments and tens of benchmarks for financial reinforcement learning.
+MuJoCo和OpenAI的XLand是RL领域著名的库，它们为机器人、游戏和通用任务构建了深度强化学习环境，在RL学术界和工业界被广泛使用。然而，它们几乎没有为金融任务提供任何高质量的环境。FinRL-Meta，之前称为Neo-FinRL（面向数据驱动金融RL的准真实市场环境），正在致力于为金融强化学习提供数百个市场环境和数十个基准。
 
 
-Metaverse for financial RL
+金融RL的元宇宙
 ============================
 
-Achieving the goal of hundreds of market environments and benchmarks discribed above, we are aiming to build a metaverse for financial reinforcement learning. Like XLand, we would provide an open-ended market world with different tasks e.g. stock, cryptocurrency, etc. for agents to explore and learn.
+实现上述数百个市场环境和基准的目标，我们旨在为金融强化学习构建一个元宇宙。与XLand类似，我们将提供一个开放式的市场世界，包含不同的任务，例如股票、加密货币等，供智能体探索和学习。
 
-Contribute to finance
+为金融做贡献
 ======================
 
-We believe in the potential of deep reinforcement learning. And we hope that after we build the metaverse for financial reinforcement learning, our agents have chance to be a market simulator, or to explore risk assessment or market fragility.
+我们相信深度强化学习的潜力。我们希望，在为金融强化学习构建元宇宙之后，我们的智能体有机会成为市场模拟器，或者用于探索风险评估或市场脆弱性。

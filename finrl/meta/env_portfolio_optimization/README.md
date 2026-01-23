@@ -1,10 +1,10 @@
-# PortfolioOptimizationEnv (POE)
+# 投资组合优化环境 (POE)
 
-This environment simulates the effects of the market in a portfolio that is periodically rebalanced through a reinforcement learning agent. At every timestep $t$, the agent is responsible for determining a portfolio vector $W_{t}$ which contains the percentage of money invested in each stock. The environment, then, utilizes data provided by the user to simulate the new portfolio value at time-step $t+1$.
+该环境模拟市场对投资组合的影响，该投资组合通过强化学习智能体定期重新平衡。在每个时间步$t$，智能体负责确定一个投资组合向量$W_{t}$，其中包含投资于每只股票的资金百分比。然后，环境利用用户提供的数据模拟时间步$t+1$时的新投资组合价值。
 
-For more details on the formulation of this problem, check the following paper:
+有关此问题公式化的更多详细信息，请查看以下论文：
 
-[POE: A General Portfolio Optimization Environment for FinRL](https://doi.org/10.5753/bwaif.2023.231144)
+[POE：FinRL的通用投资组合优化环境](https://doi.org/10.5753/bwaif.2023.231144)
 ```
 @inproceedings{bwaif,
  author = {Caio Costa and Anna Costa},
@@ -22,12 +22,9 @@ For more details on the formulation of this problem, check the following paper:
 }
 ```
 
-## Inputs
-This environment simulates the interactions between an agent and the financial market
-based on data provided by a dataframe. The dataframe contains the time series of
-features defined by the user (such as closing, high and low prices) and must have
-a time and a tic column with a list of datetimes and ticker symbols respectively.
-An example of dataframe is shown below:
+## 输入
+该环境基于数据框提供的数据模拟智能体与金融市场之间的交互。数据框包含用户定义的特征时间序列（例如收盘价、最高价和最低价），并且必须具有时间列和股票代码列，分别包含日期时间列表和股票代码符号列表。
+数据框示例如下：
 ``````
     date        high            low             close           tic
 0   2020-12-23  0.157414        0.127420        0.136394        ADA-USD
@@ -38,21 +35,21 @@ An example of dataframe is shown below:
 ... ...         ...             ...             ...             ...
 ``````
 
-## Actions
+## 动作
 
-At each time step, the environment expects an action that is a one-dimensional Box of shape (n+1,), where $n$ is the number of stocks in the portfolio. This action is called *portfolio vector* and contains, for the remaining cash and for each stock, the percentage of allocated money.
+在每个时间步，环境期望一个形状为(n+1,)的一维Box动作，其中$n$是投资组合中的股票数量。这个动作称为*投资组合向量*，包含剩余现金和每只股票的分配资金百分比。
 
-For example: given a portfolio of three stocks, a valid portfolio vector would b $W_{t} = [0.25, 0.4, 0.2, 0.15]$. In this example, 25% of the money is not invested (remaining cash), 40% is invested in stock 1, 20% in stock 2 and 15% in sotck 3.
+例如：给定一个包含三只股票的投资组合，一个有效的投资组合向量为$W_{t} = [0.25, 0.4, 0.2, 0.15]$。在此示例中，25%的资金未投资（剩余现金），40%投资于股票1，20%投资于股票2，15%投资于股票3。
 
-**Note:** It's important that the sum of the values in the portfolio vator is equal (or very close) to 1. If it's not, POE will apply a softmax normalization.
+**注意：** 投资组合向量中的值之和等于（或非常接近）1非常重要。如果不是，POE将应用softmax归一化。
 
-## Observations
+## 观测
 
-POE can return two types of observations during simulation: a Dict or a Box.
+POE在模拟过程中可以返回两种类型的观测：Dict或Box。
 
-- The box is a three-dimensional array of shape $(f, n, t)$, where $f$ s the number of features, $n$ is the number of stocks in the portfolio and $t$ is the time series timw window. This observation basically only contains the current state of the agent.
+- Box是一个形状为$(f, n, t)$的三维数组，其中$f$是特征数量，$n$是投资组合中的股票数量，$t$是时间序列时间窗口。该观测基本上只包含智能体的当前状态。
 
-- The dict representation, on the other hand, is a dictionary containing the state and the last portfolio vector, like below:
+- 另一方面，字典表示是包含状态和上一个投资组合向量的字典，如下所示：
 
 ```json
 {
@@ -61,8 +58,8 @@ POE can return two types of observations during simulation: a Dict or a Box.
 }
 ```
 
-## Rewards
-Given the simulation of timestep $t$, the reward is given by the following formula: $r_{t} = ln(V_{t}/V_{t-1})$, where $V_{t}$ is the value of the portfolio at time $t$. By using this formulation, the reward is negative whenever the portfolio value decreases due to a rebalancing and is positive otherwise.
+## 奖励
+给定时间步$t$的模拟，奖励由以下公式给出：$r_{t} = ln(V_{t}/V_{t-1})$，其中$V_{t}$是时间$t$时的投资组合价值。通过使用此公式，每当投资组合价值因重新平衡而减少时，奖励为负，否则为正。
 
-## Example
-A jupyter notebook using this environment can be found [here](/examples/FinRL_PortfolioOptimizationEnv_Demo.ipynb).
+## 示例
+使用此环境的Jupyter笔记本可以在[此处](/examples/FinRL_PortfolioOptimizationEnv_Demo.ipynb)找到。

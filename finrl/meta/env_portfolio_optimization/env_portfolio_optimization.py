@@ -1,4 +1,4 @@
-"""From FinRL https://github.com/AI4Finance-LLC/FinRL/tree/master/finrl/env"""
+"""来自 FinRL https://github.com/AI4Finance-LLC/FinRL/tree/master/finrl/env"""
 
 from __future__ import annotations
 
@@ -20,8 +20,8 @@ try:
     import quantstats as qs
 except ModuleNotFoundError:
     raise ModuleNotFoundError(
-        """QuantStats module not found, environment can't plot results and calculate indicadors.
-        This module is not installed with FinRL. Install by running one of the options:
+        """QuantStats模块未找到，环境无法绘制结果和计算指标。
+        此模块未随FinRL安装。通过运行以下选项之一安装：
         pip install quantstats --upgrade --no-cache-dir
         conda install -c ranaroussi quantstats
         """
@@ -29,13 +29,10 @@ except ModuleNotFoundError:
 
 
 class PortfolioOptimizationEnv(gym.Env):
-    """A portfolio allocation environment for OpenAI gym.
+    """用于OpenAI gym的投资组合分配环境。
 
-    This environment simulates the interactions between an agent and the financial market
-    based on data provided by a dataframe. The dataframe contains the time series of
-    features defined by the user (such as closing, high and low prices) and must have
-    a time and a tic column with a list of datetimes and ticker symbols respectively.
-    An example of dataframe is shown below::
+    该环境基于数据框提供的数据模拟智能体与金融市场之间的交互。数据框包含用户定义的特征时间序列（例如收盘价、最高价和最低价），并且必须具有时间列和股票代码列，分别包含日期时间列表和股票代码符号列表。
+    数据框示例如下：:
 
             date        high            low             close           tic
         0   2020-12-23  0.157414        0.127420        0.136394        ADA-USD
@@ -45,27 +42,20 @@ class PortfolioOptimizationEnv(gym.Env):
         4   2020-12-23  637.122803      560.364258      583.714600      ETH-USD
         ... ...         ...             ...             ...             ...
 
-    Based on this dataframe, the environment will create an observation space that can
-    be a Dict or a Box. The Box observation space is a three-dimensional array of shape
-    (f, n, t), where f is the number of features, n is the number of stocks in the
-    portfolio and t is the user-defined time window. If the environment is created with
-    the parameter return_last_action set to True, the observation space is a Dict with
-    the following keys::
+    基于此数据框，环境将创建一个可以是Dict或Box的观测空间。Box观测空间是一个形状为(f, n, t)的三维数组，其中f是特征数量，n是投资组合中的股票数量，t是用户定义的时间窗口。如果环境创建时参数return_last_action设置为True，则观测空间是一个具有以下键的Dict：:
 
         {
-        "state": three-dimensional Box (f, n, t) representing the time series,
-        "last_action": one-dimensional Box (n+1,) representing the portfolio weights
+        "state": 表示时间序列的三维Box (f, n, t),
+        "last_action": 表示投资组合权重的一维Box (n+1,)
         }
 
-    Note that the action space of this environment is an one-dimensional Box with size
-    n + 1 because the portfolio weights must contains the weights related to all the
-    stocks in the portfolio and to the remaining cash.
+    请注意，此环境的动作空间是一个大小为n + 1的一维Box，因为投资组合权重必须包含与投资组合中所有股票以及剩余现金相关的权重。
 
-    Attributes:
-        action_space: Action space.
-        observation_space: Observation space.
-        episode_length: Number of timesteps of an episode.
-        portfolio_size: Number of stocks in the portfolio.
+    属性：
+        action_space: 动作空间。
+        observation_space: 观测空间。
+        episode_length: 一个episode的时间步数。
+        portfolio_size: 投资组合中的股票数量。
     """
 
     metadata = {"render.modes": ["human"]}
@@ -90,38 +80,26 @@ class PortfolioOptimizationEnv(gym.Env):
         cwd="./",
         new_gym_api=False,
     ):
-        """Initializes environment's instance.
+        """初始化环境实例。
 
-        Args:
-            df: Dataframe with market information over a period of time.
-            initial_amount: Initial amount of cash available to be invested.
-            order_df: If True input dataframe is ordered by time.
-            return_last_action: If True, observations also return the last performed
-                action. Note that, in that case, the observation space is a Dict.
-            normalize_df: Defines the normalization method applied to input dataframe.
-                Possible values are "by_previous_time", "by_fist_time_window_value",
-                "by_COLUMN_NAME" (where COLUMN_NAME must be changed to a real column
-                name) and a custom function. If None no normalization is done.
-            reward_scaling: A scaling factor to multiply the reward function. This
-                factor can help training.
-            comission_fee_model: Model used to simulate comission fee. Possible values
-                are "trf" (for transaction remainder factor model) and "wvm" (for weights
-                vector modifier model). If None, commission fees are not considered.
-            comission_fee_pct: Percentage to be used in comission fee. It must be a value
-                between 0 and 1.
-            features: List of features to be considered in the observation space. The
-                items of the list must be names of columns of the input dataframe.
-            valuation_feature: Feature to be considered in the portfolio value calculation.
-            time_column: Name of the dataframe's column that contain the datetimes that
-                index the dataframe.
-            time_format: Formatting string of time column.
-            tic_name: Name of the dataframe's column that contain ticker symbols.
-            tics_in_portfolio: List of ticker symbols to be considered as part of the
-                portfolio. If "all", all tickers of input data are considered.
-            time_window: Size of time window.
-            cwd: Local repository in which resulting graphs will be saved.
-            new_gym_api: If True, the environment will use the new gym api standard for
-                step and reset methods.
+        参数：
+            df: 包含一段时间内市场信息的数据框。
+            initial_amount: 可用于投资的初始现金金额。
+            order_df: 如果为True，输入数据框按时间排序。
+            return_last_action: 如果为True，观测也会返回最后执行的动作。请注意，在这种情况下，观测空间是一个Dict。
+            normalize_df: 定义应用于输入数据框的归一化方法。可能的值有"by_previous_time"、"by_fist_time_window_value"、"by_COLUMN_NAME"（其中COLUMN_NAME必须更改为实际列名）和自定义函数。如果为None，则不进行归一化。
+            reward_scaling: 用于乘以奖励函数的缩放因子。此因子可以帮助训练。
+            comission_fee_model: 用于模拟佣金费用的模型。可能的值有"trf"（交易剩余因子模型）和"wvm"（权重向量修改器模型）。如果为None，则不考虑佣金费用。
+            comission_fee_pct: 用于佣金的百分比。必须是0到1之间的值。
+            features: 要在观测空间中考虑的特征列表。列表的项必须是输入数据框的列名。
+            valuation_feature: 在投资组合价值计算中要考虑的特征。
+            time_column: 数据框列的名称，包含索引数据框的日期时间。
+            time_format: 时间列的格式化字符串。
+            tic_name: 数据框列的名称，包含股票代码符号。
+            tics_in_portfolio: 要视为投资组合一部分的股票代码符号列表。如果为"all"，则考虑输入数据的所有股票代码。
+            time_window: 时间窗口的大小。
+            cwd: 结果图将保存的本地仓库。
+            new_gym_api: 如果为True，环境将使用新的gym api标准进行step和reset方法。
         """
         self._time_window = time_window
         self._time_index = time_window - 1

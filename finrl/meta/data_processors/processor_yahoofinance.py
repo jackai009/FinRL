@@ -1,4 +1,4 @@
-"""Reference: https://github.com/AI4Finance-LLC/FinRL"""
+"""参考：https://github.com/AI4Finance-LLC/FinRL"""
 
 from __future__ import annotations
 
@@ -33,31 +33,30 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 class YahooFinanceProcessor:
-    """Provides methods for retrieving daily stock data from
-    Yahoo Finance API
+    """提供从Yahoo Finance API检索每日股票数据的方法
     """
 
     def __init__(self):
         pass
 
     """
-    Param
+    参数
     ----------
         start_date : str
-            start date of the data
+            数据的开始日期
         end_date : str
-            end date of the data
+            数据的结束日期
         ticker_list : list
-            a list of stock tickers
-    Example
+            股票代码列表
+    示例
     -------
-    input:
+    输入：
     ticker_list = config_tickers.DOW_30_TICKER
     start_date = '2009-01-01'
     end_date = '2021-10-31'
     time_interval == "1D"
 
-    output:
+    输出：
         date	    tic	    open	    high	    low	        close	    volume
     0	2009-01-02	AAPL	3.067143	3.251429	3.041429	2.767330	746015200.0
     1	2009-01-02	AMGN	58.590000	59.080002	57.750000	44.523766	6547900.0
@@ -69,28 +68,28 @@ class YahooFinanceProcessor:
     ######## ADDED BY aymeric75 ###################
 
     def date_to_unix(self, date_str) -> int:
-        """Convert a date string in yyyy-mm-dd format to Unix timestamp."""
+        """将yyyy-mm-dd格式的日期字符串转换为Unix时间戳。"""
         dt = datetime.datetime.strptime(date_str, "%Y-%m-%d")
         return int(dt.timestamp())
 
     def fetch_stock_data(self, stock_name, period1, period2) -> pd.DataFrame:
-        # Base URL
+        # 基础URL
         url = f"https://finance.yahoo.com/quote/{stock_name}/history/?period1={period1}&period2={period2}&filter=history"
 
-        # Selenium WebDriver Setup
+        # Selenium WebDriver 设置
         options = Options()
-        options.add_argument("--headless")  # Headless for performance
-        options.add_argument("--disable-gpu")  # Disable GPU for compatibility
+        options.add_argument("--headless")  # 无头模式以提高性能
+        options.add_argument("--disable-gpu")  # 禁用GPU以提高兼容性
         driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=options
         )
 
-        # Navigate to the URL
+        # 导航到URL
         driver.get(url)
         driver.maximize_window()
-        time.sleep(5)  # Wait for redirection and page load
+        time.sleep(5)  # 等待重定向和页面加载
 
-        # Handle potential popup
+        # 处理可能的弹窗
         try:
             RejectAll = driver.find_element(
                 By.XPATH, '//button[@class="btn secondary reject-all"]'

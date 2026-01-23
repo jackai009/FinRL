@@ -1,8 +1,8 @@
-# Publications
+# 发表论文
 
-Papers by the Columbia research team can be found at [Google Scholar](https://scholar.google.com/citations?view_op=list_works&hl=en&hl=en&user=XsdPXocAAAAJ).
+哥伦比亚研究团队的论文可以在[Google Scholar](https://scholar.google.com/citations?view_op=list_works&hl=en&hl=en&user=XsdPXocAAAAJ)上找到。
 
-|Title |Conference |Link|Citations|Year|
+|标题 |会议 |链接|引用次数|年份|
 |  ----  |  ----  |  ----  |  ----  |  ----  |
 |**FinRL-Meta**: A Universe of Near-Real Market Environments for Data-Driven Deep Reinforcement Learning in Quantitative Finance| NeurIPS 2021 Data-Centric AI Workshop| [paper](https://arxiv.org/abs/2112.06753) ;<br />[code](https://github.com/AI4Finance-Foundation/FinRL-Meta)| 2| 2021|
 |Explainable deep reinforcement learning for portfolio management: An empirical approach| ICAIF 2021 : ACM International Conference on AI in Finance | [paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3958005);<br />[code](https://github.com/AI4Finance-Foundation/FinRL)| 1| 2021|

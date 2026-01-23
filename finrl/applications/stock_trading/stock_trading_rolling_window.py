@@ -163,10 +163,10 @@ def stock_trading_rolling_window(
             env_train, _ = e_train_gym.get_sb_env()
             agent = DRLAgent(env=env_train)
             model_ddpg = agent.get_model("ddpg")
-            # set up logger
+            # 设置日志记录器
             tmp_path = RESULTS_DIR + "/ddpg"
             new_logger_ddpg = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-            # Set new logger
+            # 设置新的日志记录器
             model_ddpg.set_logger(new_logger_ddpg)
             trained_ddpg = agent.train_model(
                 model=model_ddpg, tb_log_name="ddpg", total_timesteps=40000
@@ -185,10 +185,10 @@ def stock_trading_rolling_window(
                 "batch_size": 64,
             }
             model_ppo = agent.get_model("ppo", model_kwargs=PPO_PARAMS)
-            # set up logger
+            # 设置日志记录器
             tmp_path = RESULTS_DIR + "/ppo"
             new_logger_ppo = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-            # Set new logger
+            # 设置新的日志记录器
             model_ppo.set_logger(new_logger_ppo)
             trained_ppo = agent.train_model(
                 model=model_ppo, tb_log_name="ppo", total_timesteps=50000
@@ -208,10 +208,10 @@ def stock_trading_rolling_window(
                 "ent_coef": "auto_0.1",
             }
             model_sac = agent.get_model("sac", model_kwargs=SAC_PARAMS)
-            # set up logger
+            # 设置日志记录器
             tmp_path = RESULTS_DIR + "/sac"
             new_logger_sac = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-            # Set new logger
+            # 设置新的日志记录器
             model_sac.set_logger(new_logger_sac)
             trained_sac = agent.train_model(
                 model=model_sac, tb_log_name="sac", total_timesteps=50000
@@ -229,17 +229,17 @@ def stock_trading_rolling_window(
                 "learning_rate": 0.0008,
             }
             model_td3 = agent.get_model("td3", model_kwargs=TD3_PARAMS)
-            # set up logger
+            # 设置日志记录器
             tmp_path = RESULTS_DIR + "/td3"
             new_logger_td3 = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-            # Set new logger
+            # 设置新的日志记录器
             model_td3.set_logger(new_logger_td3)
             trained_td3 = agent.train_model(
                 model=model_td3, tb_log_name="td3", total_timesteps=50000
             )
 
-        # trade
-        # this e_trade_gym is initialized, then it will be used if i == 0
+        # 交易
+        # 这个e_trade_gym被初始化，然后在i == 0时将被使用
         e_trade_gym = StockTradingEnv(
             df=trade_data,
             turbulence_threshold=70,
@@ -312,7 +312,7 @@ def stock_trading_rolling_window(
                 model=trained_td3, environment=e_trade_gym
             )
 
-        # in python version, we should check isinstance, but in notebook version, it is not necessary
+        # 在Python版本中，我们应该检查isinstance，但在notebook版本中，这不是必需的
         if if_using_a2c and isinstance(result_a2c, tuple):
             actions_i_a2c = result_a2c[1]
             result_a2c = result_a2c[0]
@@ -329,7 +329,7 @@ def stock_trading_rolling_window(
             actions_i_td3 = result_td3[1]
             result_td3 = result_td3[0]
 
-        # merge actions
+        # 合并动作
         actions_a2c = pd.concat([actions_a2c, actions_i_a2c]) if if_using_a2c else None
         actions_ddpg = (
             pd.concat([actions_ddpg, actions_i_ddpg]) if if_using_ddpg else None
@@ -338,7 +338,7 @@ def stock_trading_rolling_window(
         actions_sac = pd.concat([actions_sac, actions_i_sac]) if if_using_sac else None
         actions_td3 = pd.concat([actions_td3, actions_i_td3]) if if_using_td3 else None
 
-        # dji_i
+        # 道琼斯指数_i
         trade_start = trade_starts[i]
         trade_end = trade_ends[i]
         dji_i_ = get_baseline(ticker="^DJI", start=trade_start, end=trade_end)
@@ -347,15 +347,15 @@ def stock_trading_rolling_window(
         dji_i["DJI"] = dji_i_["close"]
         # dji_i.rename(columns={'account_value': 'DJI'}, inplace=True)
 
-        # select the rows between trade_start and trade_end (not included), since some values may not in this region
+        # 选择trade_start和trade_end之间的行（不包括），因为某些值可能不在此区域
         dji_i = dji_i.loc[
             (dji_i[date_col] >= trade_start) & (dji_i[date_col] < trade_end)
         ]
 
-        # init result_i by dji_i
+        # 用dji_i初始化result_i
         result_i = dji_i
 
-        # rename column name of result_a2c, result_ddpg, etc., and then put them to result_i
+        # 重命名result_a2c、result_ddpg等的列名，然后将它们放入result_i
         if if_using_a2c:
             result_a2c.rename(columns={"account_value": "A2C"}, inplace=True)
             result_i = pd.merge(result_i, result_a2c, how="left")
@@ -372,13 +372,13 @@ def stock_trading_rolling_window(
             result_td3.rename(columns={"account_value": "TD3"}, inplace=True)
             result_i = pd.merge(result_i, result_td3, how="left")
 
-        # remove the rows with nan
+        # 移除包含NaN的行
         result_i = result_i.dropna(axis=0, how="any")
 
-        # merge result_i to result
+        # 将result_i合并到result
         result = pd.concat([result, result_i], axis=0)
 
-    # store actions
+    # 存储动作
     if if_store_actions:
         actions_a2c.to_csv("actions_a2c.csv") if if_using_a2c else None
         actions_ddpg.to_csv("actions_ddpg.csv") if if_using_ddpg else None
@@ -386,28 +386,28 @@ def stock_trading_rolling_window(
         actions_sac.to_csv("actions_sac.csv") if if_using_sac else None
         actions_td3.to_csv("actions_td3.csv") if if_using_td3 else None
 
-    # calc the column name of strategies, including DJI
+    # 计算策略的列名，包括DJI
     col_strategies = []
     for col in result.columns:
         if col != date_col and col != "" and "Unnamed" not in col:
             col_strategies.append(col)
 
-    # make sure that the first row of DJI is initial_amount
+    # 确保DJI的第一行是初始金额
     col = "DJI"
     result[col] = result[col] / result[col].iloc[0] * initial_amount
     result = result.reset_index(drop=True)
 
-    # stats
+    # 统计
     for col in col_strategies:
         stats = backtest_stats(result, value_col_name=col)
         print("\nstats of " + col + ": \n", stats)
 
-    # print and save result
+    # 打印并保存结果
     print("result: ", result)
     if if_store_result:
         result.to_csv("result.csv")
 
-    # plot fig
+    # 绘制图表
     plot_return(
         result=result,
         column_as_x=date_col,
@@ -425,7 +425,7 @@ if __name__ == "__main__":
     train_end_date = "2022-07-01"
     trade_start_date = "2022-07-01"
     trade_end_date = "2022-11-01"
-    rolling_window_length = 22  # num of trading days in a rolling window
+    rolling_window_length = 22  # 滚动窗口中的交易日数量
     if_store_actions = True
     if_store_result = True
     if_using_a2c = True

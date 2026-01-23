@@ -1,27 +1,27 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 ============================
-Installation
+安装指南
 ============================
 
-MAC OS
+macOS系统
 =======
 
-Step 1: Install `Anaconda <https://www.anaconda.com/products/individual>`_
+步骤1：安装`Anaconda <https://www.anaconda.com/products/individual>`_
 ---------------------------------------------------------------------------------------------
 
 
--Download `Anaconda Installer <https://www.anaconda.com/products/individual#macos>`_, Anaconda has everything you need for Python programming.
+-下载`Anaconda安装程序 <https://www.anaconda.com/products/individual#macos>`_，Anaconda包含Python编程所需的一切。
 
--Follow Anaconda’s instruction: `macOS graphical install <https://docs.anaconda.com/anaconda/install/mac-os/>`_, to install the newest version of Anaconda.
+-按照Anaconda的说明：`macOS图形安装 <https://docs.anaconda.com/anaconda/install/mac-os/>`_，安装最新版本的Anaconda。
 
--Open your terminal and type: *'which python'*, it should show:
+-打开终端并输入：*'which python'*，应该显示：
 
 .. code-block:: bash
 
    /Users/your_user_name/opt/anaconda3/bin/python
 
-It means that your Python interpreter path has been pinned to Anaconda’s python version. If it shows something like this:
+这意味着您的Python解释器路径已固定到Anaconda的Python版本。如果显示类似以下内容：
 
 .. code-block:: bash
 

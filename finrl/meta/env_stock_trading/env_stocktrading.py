@@ -13,21 +13,21 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 
 matplotlib.use("Agg")
 
-# from stable_baselines3.common.logger import Logger, KVWriter, CSVOutputFormat
+# 从stable_baselines3.common.logger导入Logger、KVWriter、CSVOutputFormat
 
 
 class StockTradingEnv(gym.Env):
     """
-    A stock trading environment for OpenAI gym
+    用于OpenAI gym的股票交易环境
 
-    Parameters:
-        df (pandas.DataFrame): Dataframe containing data
-        hmax (int): Maximum cash to be traded in each trade per asset.
-        initial_amount (int): Amount of cash initially available
-        buy_cost_pct (float, array): Cost for buying shares, each index corresponds to each asset
-        sell_cost_pct (float, array): Cost for selling shares, each index corresponds to each asset
-        turbulence_threshold (float): Maximum turbulence allowed in market for purchases to occur. If exceeded, positions are liquidated
-        print_verbosity(int): When iterating (step), how often to print stats about state of env
+    参数：
+        df (pandas.DataFrame): 包含数据的数据框
+        hmax (int): 每项资产每次交易的最大交易现金
+        initial_amount (int): 初始可用现金金额
+        buy_cost_pct (float, array): 购买股票的成本，每个索引对应每项资产
+        sell_cost_pct (float, array): 出售股票的成本，每个索引对应每项资产
+        turbulence_threshold (float): 允许进行购买的最大市场波动阈值。如果超过，头寸将被清算
+        print_verbosity(int): 迭代（步骤）时，打印环境状态统计信息的频率
     """
 
     metadata = {"render.modes": ["human"]}
@@ -61,7 +61,7 @@ class StockTradingEnv(gym.Env):
         self.stock_dim = stock_dim
         self.hmax = hmax
         self.num_stock_shares = num_stock_shares
-        self.initial_amount = initial_amount  # get the initial cash
+        self.initial_amount = initial_amount  # 获取初始现金
         self.buy_cost_pct = buy_cost_pct
         self.sell_cost_pct = sell_cost_pct
         self.reward_scaling = reward_scaling
@@ -83,28 +83,28 @@ class StockTradingEnv(gym.Env):
         self.model_name = model_name
         self.mode = mode
         self.iteration = iteration
-        # initalize state
+        # 初始化状态
         self.state = self._initiate_state()
 
-        # initialize reward
+        # 初始化奖励
         self.reward = 0
         self.turbulence = 0
         self.cost = 0
         self.trades = 0
         self.episode = 0
-        # memorize all the total balance change
+        # 记录所有总余额变化
         self.asset_memory = [
             self.initial_amount
             + np.sum(
                 np.array(self.num_stock_shares)
                 * np.array(self.state[1 : 1 + self.stock_dim])
             )
-        ]  # the initial total asset is calculated by cash + sum (num_share_stock_i * price_stock_i)
+        ]  # 初始总资产通过现金 + 总和（股票i的股数 * 股票i的价格）计算
         self.rewards_memory = []
         self.actions_memory = []
         self.state_memory = (
             []
-        )  # we need sometimes to preserve the state in the middle of trading process
+        )  # 我们有时需要保留交易过程中的状态
         self.date_memory = [self._get_date()]
         #         self.logger = Logger('results',[CSVOutputFormat])
         # self.reset()
@@ -114,12 +114,12 @@ class StockTradingEnv(gym.Env):
         def _do_sell_normal():
             if (
                 self.state[index + 2 * self.stock_dim + 1] != True
-            ):  # check if the stock is able to sell, for simlicity we just add it in techical index
-                # if self.state[index + 1] > 0: # if we use price<0 to denote a stock is unable to trade in that day, the total asset calculation may be wrong for the price is unreasonable
-                # Sell only if the price is > 0 (no missing data in this particular date)
-                # perform sell action based on the sign of the action
+            ):  # 检查股票是否可以出售，为简化起见，我们只是将其添加到技术指标中
+                # 如果self.state[index + 1] > 0：#如果我们使用price<0表示股票当天无法交易，总资产计算可能会因为价格不合理而出错
+                # 仅当价格>0时出售（该特定日期没有缺失数据）
+                # 根据动作的符号执行出售动作
                 if self.state[index + self.stock_dim + 1] > 0:
-                    # Sell only if current asset is > 0
+                    # 仅当当前资产>0时出售
                     sell_num_shares = min(
                         abs(action), self.state[index + self.stock_dim + 1]
                     )
@@ -128,7 +128,7 @@ class StockTradingEnv(gym.Env):
                         * sell_num_shares
                         * (1 - self.sell_cost_pct[index])
                     )
-                    # update balance
+                    # 更新余额
                     self.state[0] += sell_amount
 
                     self.state[index + self.stock_dim + 1] -= sell_num_shares
