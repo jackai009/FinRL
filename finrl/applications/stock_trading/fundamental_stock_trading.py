@@ -61,35 +61,35 @@ def main():
 
     df.sort_values(["date", "tic"], ignore_index=True).head()
 
-    # Import fundamental data from my GitHub repository
+    # 从我的GitHub仓库导入基本面数据
     url = "https://raw.githubusercontent.com/mariko-sawada/FinRL_with_fundamental_data/main/dow_30_fundamental_wrds.csv"
 
     fund = pd.read_csv(url)
 
-    # List items that are used to calculate financial ratios
+    # 用于计算财务比率的项目列表
 
     items = [
-        "datadate",  # Date
-        "tic",  # Ticker
-        "oiadpq",  # Quarterly operating income
-        "revtq",  # Quartely revenue
-        "niq",  # Quartely net income
-        "atq",  # Total asset
-        "teqq",  # Shareholder's equity
-        "epspiy",  # EPS(Basic) incl. Extraordinary items
-        "ceqq",  # Common Equity
-        "cshoq",  # Common Shares Outstanding
-        "dvpspq",  # Dividends per share
-        "actq",  # Current assets
-        "lctq",  # Current liabilities
-        "cheq",  # Cash & Equivalent
-        "rectq",  # Recievalbles
-        "cogsq",  # Cost of  Goods Sold
-        "invtq",  # Inventories
-        "apq",  # Account payable
-        "dlttq",  # Long term debt
-        "dlcq",  # Debt in current liabilites
-        "ltq",  # Liabilities
+        "datadate",  # 日期
+        "tic",  # 股票代码
+        "oiadpq",  # 季度营业收入
+        "revtq",  # 季度收入
+        "niq",  # 季度净利润
+        "atq",  # 总资产
+        "teqq",  # 股东权益
+        "epspiy",  # 每股收益（基本）包含特殊项目
+        "ceqq",  # 普通股权益
+        "cshoq",  # 流通普通股数量
+        "dvpspq",  # 每股股息
+        "actq",  # 流动资产
+        "lctq",  # 流动负债
+        "cheq",  # 现金及等价物
+        "rectq",  # 应收账款
+        "cogsq",  # 销售成本
+        "invtq",  # 存货
+        "apq",  # 应付账款
+        "dlttq",  # 长期债务
+        "dlcq",  # 流动负债中的债务
+        "ltq",  # 负债
     ]
 
     # Omit items that will not be used

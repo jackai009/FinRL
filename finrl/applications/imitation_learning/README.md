@@ -1,23 +1,23 @@
-# FinRL Imitation Learning
+# FinRL 模仿学习
 
-A multi-stage machine learning approach is a promising approach for analyzing financial big data, especially when learning from alpha factors or smart investors. Here, we automate this workflow, starting with imitating these strategies, and then using reinforcement learning method to further refine the results.
+多阶段机器学习方法是分析金融大数据的有效方法，特别是在从阿尔法因子或聪明投资者学习时。在这里，我们自动化这个工作流程，从模仿这些策略开始，然后使用强化学习方法进一步优化结果。
 
-In complicated tasks such as Go and Atari games, imitation learning is often used to initialize deep neural networks that achieve human-level performance. Imitation learning involves training a model to imitate a human's behavior, typically using a dataset of expert demonstrations. This process provides a a starting point for further refinement using reinforcement learning, which could learn through trial and error to find strategies that surpass human-level performance.
+在复杂任务如围棋和Atari游戏中，模仿学习通常用于初始化达到人类水平的深度神经网络。模仿学习涉及训练模型模仿人类行为，通常使用专家演示的数据集。这个过程为使用强化学习进一步优化提供了一个起点，强化学习可以通过试错找到超越人类水平的策略。
 
-By automating this workflow, we can analogously save valuable time and resources, while also providing more accurate and reliable results. Ultimately, this approach can help to identify profitable investment opportunities and inform smarter financial decision-making.
+通过自动化这个工作流程，我们可以显著节省宝贵的时间和资源，同时提供更准确可靠的结果。最终，这种方法有助于识别有利可图的投资机会，并为更明智的金融决策提供信息。
 
-## File Structure
+## 文件结构
 
-**1-Stock Selection**
+**1-股票选择**
 
-We identify a pool of stocks that are favoured by retail investors and have a high correlation between their trading preference and return rates. By analyzing the trading behaviour of retail investors, we can gain valuable insights into the stocks that are popular among this group and understand how their trading preferences affect the performance of these stocks.
+我们识别一组受散户投资者青睐的股票，这些股票的交易偏好与回报率之间存在高度相关性。通过分析散户投资者的交易行为，我们可以获得有关该群体中受欢迎的股票的宝贵见解，并了解他们的交易偏好如何影响这些股票的表现。
 
-**2-Weight Initialization**
+**2-权重初始化**
 
-We construct the action space, which will serve as data labels. The action space is a critical component of a machine learning approach, as it represents the set of actions that our algorithm can take in response to a data input. There are two key sources to inform the action construction: MVO (mean-variance optimization) and retail investor preferred weights.
+我们构建动作空间，这将作为数据标签。动作空间是机器学习方法的关键组成部分，它代表我们的算法可以响应数据输入而采取的一组动作。动作构建有两个关键信息来源：MVO（均值-方差优化）和散户投资者偏好的权重。
 
-**3-Imitation Sandbox**
+**3-模仿沙盒**
 
-We use a set of regression models, including linear models, trees, and neural networks, to analyze our data. Our approach involves incrementally increasing the complexity of the models to evaluate their performance in predicting outcomes.
+我们使用一组回归模型，包括线性模型、树模型和神经网络，来分析我们的数据。我们的方法涉及逐步增加模型的复杂性，以评估它们在预测结果方面的性能。
 
-To ensure the reliability of our analysis, we conduct a placebo test to evaluate the potential for information leakage. This involves feeding simulated data into our models to assess their performance in predicting outcomes that are not based on actual data. By doing so, we can ensure that our models are not biased by any unforeseen factors or hidden information that may have influenced the results.
+为确保我们分析的可靠性，我们进行安慰剂测试来评估信息泄漏的可能性。这涉及将模拟数据输入我们的模型，以评估它们在预测不基于实际数据的结果方面的性能。通过这样做，我们可以确保我们的模型不会受到任何可能影响结果的未预见因素或隐藏信息的偏差。

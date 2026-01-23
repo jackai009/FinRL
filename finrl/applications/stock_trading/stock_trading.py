@@ -107,10 +107,10 @@ def stock_trading(
     if if_using_a2c:
         agent = DRLAgent(env=env_train)
         model_a2c = agent.get_model("a2c")
-        # set up logger
+        # 设置日志记录器
         tmp_path = RESULTS_DIR + "/a2c"
         new_logger_a2c = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-        # Set new logger
+        # 设置新的日志记录器
         model_a2c.set_logger(new_logger_a2c)
         trained_a2c = agent.train_model(
             model=model_a2c, tb_log_name="a2c", total_timesteps=50000
@@ -119,10 +119,10 @@ def stock_trading(
     if if_using_ddpg:
         agent = DRLAgent(env=env_train)
         model_ddpg = agent.get_model("ddpg")
-        # set up logger
+        # 设置日志记录器
         tmp_path = RESULTS_DIR + "/ddpg"
         new_logger_ddpg = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-        # Set new logger
+        # 设置新的日志记录器
         model_ddpg.set_logger(new_logger_ddpg)
         trained_ddpg = agent.train_model(
             model=model_ddpg, tb_log_name="ddpg", total_timesteps=50000
@@ -137,10 +137,10 @@ def stock_trading(
             "batch_size": 128,
         }
         model_ppo = agent.get_model("ppo", model_kwargs=PPO_PARAMS)
-        # set up logger
+        # 设置日志记录器
         tmp_path = RESULTS_DIR + "/ppo"
         new_logger_ppo = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-        # Set new logger
+        # 设置新的日志记录器
         model_ppo.set_logger(new_logger_ppo)
         trained_ppo = agent.train_model(
             model=model_ppo, tb_log_name="ppo", total_timesteps=50000
@@ -156,10 +156,10 @@ def stock_trading(
             "ent_coef": "auto_0.1",
         }
         model_sac = agent.get_model("sac", model_kwargs=SAC_PARAMS)
-        # set up logger
+        # 设置日志记录器
         tmp_path = RESULTS_DIR + "/sac"
         new_logger_sac = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-        # Set new logger
+        # 设置新的日志记录器
         model_sac.set_logger(new_logger_sac)
         trained_sac = agent.train_model(
             model=model_sac, tb_log_name="sac", total_timesteps=50000
@@ -169,16 +169,16 @@ def stock_trading(
         agent = DRLAgent(env=env_train)
         TD3_PARAMS = {"batch_size": 100, "buffer_size": 1000000, "learning_rate": 0.001}
         model_td3 = agent.get_model("td3", model_kwargs=TD3_PARAMS)
-        # set up logger
+        # 设置日志记录器
         tmp_path = RESULTS_DIR + "/td3"
         new_logger_td3 = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-        # Set new logger
+        # 设置新的日志记录器
         model_td3.set_logger(new_logger_td3)
         trained_td3 = agent.train_model(
             model=model_td3, tb_log_name="td3", total_timesteps=50000
         )
 
-    # trade
+    # 交易
     e_trade_gym = StockTradingEnv(
         df=init_trade_data,
         turbulence_threshold=70,
@@ -212,7 +212,7 @@ def stock_trading(
             model=trained_td3, environment=e_trade_gym
         )
 
-    # in python version, we should check isinstance, but in notebook version, it is not necessary
+    # 在Python版本中，我们应该检查isinstance，但在notebook版本中，这不是必需的
     if if_using_a2c and isinstance(result_a2c, tuple):
         actions_a2c = result_a2c[1]
         result_a2c = result_a2c[0]
@@ -229,7 +229,7 @@ def stock_trading(
         actions_td3 = result_td3[1]
         result_td3 = result_td3[0]
 
-    # store actions
+    # 存储动作
     if if_store_actions:
         actions_a2c.to_csv("actions_a2c.csv") if if_using_a2c else None
         actions_ddpg.to_csv("actions_ddpg.csv") if if_using_ddpg else None
@@ -237,12 +237,12 @@ def stock_trading(
         actions_ppo.to_csv("actions_ppo.csv") if if_using_ppo else None
         actions_sac.to_csv("actions_sac.csv") if if_using_sac else None
 
-    # dji
+    # 道琼斯指数
     dji_ = get_baseline(ticker="^DJI", start=trade_start_date, end=trade_end_date)
     dji = pd.DataFrame()
     dji[date_col] = dji_[date_col]
     dji["DJI"] = dji_["close"]
-    # select the rows between trade_start and trade_end (not included), since some values may not in this region
+    # 选择trade_start和trade_end之间的行（不包括），因为某些值可能不在此区域
     dji = dji.loc[
         (dji[date_col] >= trade_start_date) & (dji[date_col] < trade_end_date)
     ]
@@ -265,31 +265,31 @@ def stock_trading(
         result_sac.rename(columns={"account_value": "SAC"}, inplace=True)
         result = pd.merge(result, result_sac, how="left")
 
-    # remove the rows with nan
+    # 移除包含NaN的行
     result = result.dropna(axis=0, how="any")
 
-    # calc the column name of strategies, including DJI
+    # 计算策略的列名，包括DJI
     col_strategies = []
     for col in result.columns:
         if col != date_col and col != "" and "Unnamed" not in col:
             col_strategies.append(col)
 
-    # make sure that the first row of DJI is initial_amount
+    # 确保DJI的第一行是初始金额
     col = "DJI"
     result[col] = result[col] / result[col].iloc[0] * initial_amount
     result = result.reset_index(drop=True)
 
-    # stats
+    # 统计
     for col in col_strategies:
         stats = backtest_stats(result, value_col_name=col)
         print("\nstats of " + col + ": \n", stats)
 
-    # print and save result
+    # 打印并保存结果
     print("result: ", result)
     if if_store_result:
         result.to_csv("result.csv")
 
-    # plot fig
+    # 绘制图表
     plot_return(
         result=result,
         column_as_x=date_col,

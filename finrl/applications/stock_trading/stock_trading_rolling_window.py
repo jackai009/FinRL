@@ -103,7 +103,7 @@ def stock_trading_rolling_window(
         "reward_scaling": 1e-4,
     }
 
-    # split the init_train_data and init_trade_data to subsets
+    # 将init_train_data和init_trade_data拆分为子集
     init_train_dates = init_train_data[date_col].unique()
     init_trade_dates = init_trade_data[date_col].unique()
 
@@ -138,7 +138,7 @@ def stock_trading_rolling_window(
         e_train_gym = StockTradingEnv(df=train_data, **env_kwargs)
         env_train, _ = e_train_gym.get_sb_env()
 
-        # train
+        # 训练
 
         if if_using_a2c:
             if len(result) >= 1:
@@ -147,10 +147,10 @@ def stock_trading_rolling_window(
             env_train, _ = e_train_gym.get_sb_env()
             agent = DRLAgent(env=env_train)
             model_a2c = agent.get_model("a2c")
-            # set up logger
+            # 设置日志记录器
             tmp_path = RESULTS_DIR + "/a2c"
             new_logger_a2c = configure(tmp_path, ["stdout", "csv", "tensorboard"])
-            # Set new logger
+            # 设置新的日志记录器
             model_a2c.set_logger(new_logger_a2c)
             trained_a2c = agent.train_model(
                 model=model_a2c, tb_log_name="a2c", total_timesteps=50000

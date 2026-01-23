@@ -88,8 +88,8 @@ def main():
         "print_verbosity": 5,
     }
 
-    rebalance_window = 63  # rebalance_window is the number of days to retrain the model
-    validation_window = 63  # validation_window is the number of days to do validation and trading (e.g. if validation_window=63, then both validation and trading period will be 63 days)
+    rebalance_window = 63  # rebalance_window是重新训练模型的天数
+    validation_window = 63  # validation_window是进行验证和交易的天数（例如，如果validation_window=63，那么验证和交易周期都将是63天）
 
     ensemble_agent = DRLEnsembleAgent(
         df=processed,
@@ -155,7 +155,7 @@ def main():
     perf_stats_all = backtest_stats(account_value=df_account_value)
     perf_stats_all = pd.DataFrame(perf_stats_all)
 
-    # baseline stats
+    # 基准统计
     print("==============Get Baseline Stats===========")
     baseline_df = get_baseline(
         ticker="^DJI",
@@ -167,9 +167,9 @@ def main():
 
     print("==============Compare to DJIA===========")
 
-    # S&P 500: ^GSPC
-    # Dow Jones Index: ^DJI
-    # NASDAQ 100: ^NDX
+    # 标准普尔500指数: ^GSPC
+    # 道琼斯工业平均指数: ^DJI
+    # 纳斯达克100指数: ^NDX
     backtest_plot(
         df_account_value,
         baseline_ticker="^DJI",
