@@ -1,11 +1,11 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
-Homegrown Example
+原生示例
 ========================
 
-We will demonstrate few homegrown examples in details, including:
+我们将详细演示几个原生示例，包括：
 
-1. stock trading
+1. 股票交易
 
 .. toctree::
    :maxdepth: 2
@@ -13,4 +13,4 @@ We will demonstrate few homegrown examples in details, including:
    stocktrading/1-data
 
 
-2. portfolio optimization
+2. 投资组合优化

@@ -1,14 +1,14 @@
 :github_url: https://github.com/AI4Finance-LLC/FinRL-Library
 
-Single Stock Trading
+单股票交易
 ============================
 
-Deep Reinforcement Learning for Stock Trading from Scratch: Single Stock Trading
+从零开始的股票交易深度强化学习：单股票交易
 
 
 .. tip::
 
-    Run the code step by step at `Google Colab`_.
+    在`Google Colab`_上逐步运行代码。
 
     .. _Google Colab: https://colab.research.google.com/github/AI4Finance-LLC/FinRL-Library/blob/master/examples/old/DRL_single_stock_trading.ipynb
 
@@ -16,10 +16,10 @@ Deep Reinforcement Learning for Stock Trading from Scratch: Single Stock Trading
 
 
 
-Step 1: Preparation
+步骤1：准备工作
 ---------------------------------------
 
-**Step 1.1: Overview**
+**步骤1.1：概述**
 
 As deep reinforcement learning (DRL) has been recognized as an effective approach in quantitative finance, getting hands-on experiences is attractive to beginners. However, to train a practical DRL trading agent that decides where to trade, at what price, and what quantity involves error-prone and arduous development and debugging.
 
@@ -108,7 +108,7 @@ As a first step we check if the additional packages needed are present, if not i
     from stable_baselines.common.policies import MlpPolicy
 
 
-Step 2: Download Data
+步骤2：下载数据
 ---------------------------------------
 
 `Yahoo Finance`_ is a website that provides stock data, financial news, financial reports, etc. All the data provided by Yahoo Finance is free.
@@ -167,7 +167,7 @@ Download and save the data in a pandas DataFrame:
 
 
 
-Step 3: Preprocess Data
+步骤3：预处理数据
 ---------------------------------------
 
 Data preprocessing is a crucial step for training a high quality machine learning model. We need to check for missing data and do feature engineering in order to convert the data into a model-ready state.
@@ -231,7 +231,7 @@ Perform Feature Engineering:
 
 
 
-Step 4: Build Environment
+步骤4：构建环境
 ---------------------------------------
 
 Considering the stochastic and interactive nature of the automated stock trading tasks, a financial task is modeled as a Markov Decision Process (MDP) problem. The training process involves observing stock price change, taking an action and reward’s calculation to have the agent adjusting its strategy accordingly. By interacting with the environment, the trading agent will derive a trading strategy with the maximized rewards as time proceeds.
@@ -356,7 +356,7 @@ Tutorial for how to design a customized trading environment will be pulished in 
 
 
 
-Step 5: Implement DRL Algorithms
+步骤5：实现DRL算法
 ---------------------------------------
 
 The implementation of the DRL algorithms are based on `OpenAI Baselines`_ and Stable Baselines. `Stable Baselines`_ is a fork of OpenAI Baselines, with a major structural refactoring, and code cleanups.
@@ -397,7 +397,7 @@ FinRL uses a DRLAgent class to implement the algorithms.
 
 
 
-Step 6: Model Training
+步骤6：模型训练
 ---------------------------------------
 
 We use 5 DRL models in this article, namely PPO, A2C, DDPG, SAC and TD3. I introduced these models in the previous article. TD3 is an improvement over DDPG.
@@ -536,7 +536,7 @@ Assume that we have $100,000 initial capital at 2019-01-01. We use the TD3 model
 .. image:: ../../image/single_5.png
 
 
-Step 7: Backtest Our Strategy
+步骤7：回测我们的策略
 ---------------------------------------
 
 Backtesting plays a key role in evaluating the performance of a trading strategy. Automated backtesting tool is preferred because it reduces the human error.

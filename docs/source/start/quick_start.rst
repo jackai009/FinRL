@@ -1,9 +1,9 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
-Quick Start
+快速开始
 ==================
 
-Open ``main.py``
+打开``main.py``
 
 .. code-block:: python
     :linenos:
@@ -49,7 +49,7 @@ Open ``main.py``
         return parser
 
 
-    # "./" will be added in front of each directory
+    # "./"将添加到每个目录的前面
     def check_and_make_directories(directories: List[str]):
         for directory in directories:
             if not os.path.exists("./" + directory):
@@ -67,8 +67,8 @@ Open ``main.py``
 
             env = StockTradingEnv
 
-            # demo for elegantrl
-            kwargs = {}  # in current meta, with respect yahoofinance, kwargs is {}. For other data sources, such as joinquant, kwargs is not empty
+            # elegantrl示例
+            kwargs = {}  # 在当前meta中，关于yahoofinance，kwargs为{}。对于其他数据源，如joinquant，kwargs不为空
             train(
                 start_date=TRAIN_START_DATE,
                 end_date=TRAIN_END_DATE,
@@ -88,8 +88,8 @@ Open ``main.py``
             from finrl import test
             env = StockTradingEnv
 
-            # demo for elegantrl
-            kwargs = {}  # in current meta, with respect yahoofinance, kwargs is {}. For other data sources, such as joinquant, kwargs is not empty
+            # elegantrl示例
+            kwargs = {}  # 在当前meta中，关于yahoofinance，kwargs为{}。对于其他数据源，如joinquant，kwargs不为空
 
             account_value_erl = test(
                 start_date=TEST_START_DATE,
@@ -130,7 +130,7 @@ Open ``main.py``
             raise ValueError("Wrong mode.")
 
 
-    ## Users can input the following command in terminal
+    ## 用户可以在终端中输入以下命令
     # python main.py --mode=train
     # python main.py --mode=test
     # python main.py --mode=trade
@@ -138,12 +138,12 @@ Open ``main.py``
         main()
 
 
-Run the library:
+运行库：
 
 .. code-block:: python
 
-    python main.py --mode=train # if train. Use DOW_30_TICKER by default.
-    python main.py --mode=test  # if test. Use DOW_30_TICKER by default.
-    python main.py --mode=trade # if trade. Users should input your alpaca parameters in config.py
+    python main.py --mode=train # 如果是训练。默认使用DOW_30_TICKER。
+    python main.py --mode=test  # 如果是测试。默认使用DOW_30_TICKER。
+    python main.py --mode=trade # 如果是交易。用户应在config.py中输入您的alpaca参数
 
-Choices for ``--mode``: start mode, train, download_data, backtest
+``--mode``选项：启动模式、训练、下载数据、回测

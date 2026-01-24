@@ -1,32 +1,32 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 ============================
-1. Stock Market Environments
+1. 股票市场环境
 ============================
 
-Considering the stochastic and interactive nature of the automated stock trading tasks, a financial task is modeled as a Markov Decision Process (MDP) problem. FinRL-Meta first preprocesses the market data, and then builds stock market environments. The environemnt observes the change of stock price and multiple features, and the agent takes an action and receives the reward from the environment, and finally the agent adjusts its strategy accordingly. By interacting with the environment, the smart agent will derive a trading strategy to maximize the long-term accumulated rewards (also named as Q-value).
+考虑到自动化股票交易任务的随机性和交互性，金融任务被建模为马尔可夫决策过程（MDP）问题。FinRL-Meta首先预处理市场数据，然后构建股票市场环境。环境观察股票价格和多个特征的变化，智能体采取行动并从环境接收奖励，最后智能体相应地调整其策略。通过与环境的交互，智能体将推导出交易策略以最大化长期累积奖励（也称为Q值）。
 
-Our trading environments, based on OpenAI Gym, simulate the markets with real market data, using time-driven simulation. FinRL library strives to provide trading environments constructed by datasets across many stock exchanges.
+我们的交易环境基于OpenAI Gym，使用真实市场数据进行时间驱动的模拟。FinRL库致力于提供基于多个证券交易所数据集构建的交易环境。
 
-In the Tutorials and Examples section, we will illustrate the detailed MDP formulation with the components of the reinforcement learning environment.
+在教程和示例部分，我们将用强化学习环境的组件详细说明MDP的构建。
 
-The application of DRL in finance is different from that in other fields, such as playing chess and card games; the latter inherently have clearly defined rules for environments. Various finance markets require different DRL algorithms to get the most appropriate automated trading agent. Realizing that setting up a training environment is time-consuming and laborious work, FinRL provides market environments based on representative listings, including NASDAQ-100, DJIA, S&P 500, SSE 50, CSI 300, and HSI, plus a user-defined environment. Thus, this library frees users from tedious and time-consuming data pre-processing workload. We know that users may want to train trading agents on their own data sets. FinRL library provides convenient support to user-imported data and allows users to adjust the granularity of time steps. We specify the format of the data. According to our data format instructions, users only need to pre-process their data sets.
+DRL在金融领域的应用与其他领域（如下棋和纸牌游戏）不同；后者本质上具有明确定义的环境规则。各种金融市场需要不同的DRL算法来获得最合适的自动化交易智能体。考虑到建立训练环境是耗时且费力的工作，FinRL提供了基于代表性上市公司的市场环境，包括NASDAQ-100、DJIA、S&P 500、SSE 50、CSI 300和HSI，以及用户自定义环境。因此，该库将用户从繁琐且耗时的数据预处理工作中解放出来。我们知道用户可能希望在自己的数据集上训练交易智能体。FinRL库为用户导入的数据提供便利支持，并允许用户调整时间步的粒度。我们指定了数据的格式。根据我们的数据格式说明，用户只需要预处理自己的数据集。
 
 
 .. image:: ../../image/finrl_meta_dataops.png
    :width: 80%
    :align: center
 
-We follow the DataOps paradigm in the data layer.
+我们在数据层遵循DataOps范式。
 
-- We establish a standard pipeline for financial data engineering in RL, ensuring data of **different formats** from different sources can be incorporated in **a unified framework**.
+- 我们为RL中的金融数据工程建立了标准流水线，确保来自不同来源的**不同格式**数据可以纳入**统一框架**。
 
-- We automate this pipeline with a **data processor**, which can access data, clean data, and extract features from various data sources with high quality and efficiency. Our data layer provides agility to model deployment.
+- 我们使用**数据处理器**自动化此流水线，该处理器可以高质量、高效地访问数据、清理数据并从各种数据源中提取特征。我们的数据层为模型部署提供了灵活性。
 
-- We employ a **training-testing-trading pipeline**. The DRL agent first learns from the training environment and is then validated in the validation environment for further adjustment. Then the validated agent is tested in historical datasets. Finally, the tested agent will be deployed in paper trading or live trading markets. First, this pipeline **solves the information leakage problem** because the trading data are never leaked when adjusting agents. Second, a unified pipeline **allows fair comparisons** among different algorithms and strategies.
+- 我们采用**训练-测试-交易流水线**。DRL智能体首先从训练环境中学习，然后在验证环境中进行验证以进一步调整。接着，经过验证的智能体在历史数据集中进行测试。最后，经过测试的智能体将部署在纸面交易或实时交易市场中。首先，该流水线**解决了信息泄漏问题**，因为在调整智能体时交易数据永远不会泄漏。其次，统一的流水线**允许不同算法和策略之间的公平比较**。
 
 .. image:: ../../image/timeline.png
    :width: 80%
    :align: center
 
-For data processing and building environment for DRL in finance, AI4Finance has maintained another project: `FinRL-Meta <https://github.com/AI4Finance-Foundation/FinRL-Meta>`_.
+对于金融DRL的数据处理和构建环境，AI4Finance维护了另一个项目：`FinRL-Meta <https://github.com/AI4Finance-Foundation/FinRL-Meta>`_。

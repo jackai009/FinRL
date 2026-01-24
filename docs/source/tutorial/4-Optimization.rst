@@ -1,11 +1,11 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
-4-Optimization
+4-优化
 ========================
 
-This section provideds examples of hyperperameter tuning and connecting cloud platform.
+本节提供超参数调优和连接云平台的示例。
 
-Notebooks in this section includes:
+本节包含的笔记本：
 
 `FinRL_HyperparameterTuning_Optuna.ipynb <https://github.com/AI4Finance-Foundation/FinRL-Tutorials/blob/master/4-Optimization/FinRL_HyperparameterTuning_Optuna.ipynb>`_,
 

@@ -1,11 +1,11 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
-5-Others
+5-其他
 ========================
 
-This section collects uncategorized notebooks such as those made by community members or for some specific usage.
+本节收集未分类的笔记本，例如由社区成员制作或用于某些特定用途的笔记本。
 
-Notebooks in this section includes:
+本节包含的笔记本：
 
 `FinRL_demo_docker.ipynb <https://github.com/AI4Finance-Foundation/FinRL-Tutorials/blob/master/5-Others/FinRL_demo_docker.ipynb>`_,
 

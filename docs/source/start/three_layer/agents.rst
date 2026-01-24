@@ -1,24 +1,24 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
-2. DRL Agents
+2. DRL智能体
 ============================
 
-FinRL contains fine-tuned standard DRL algorithms in ElegantRL, Stable Baseline 3, and RLlib. ElegantRL is a scalable and elastic DRL library that maintained by AI4Finance, with faster and more stable performance than Stable Baseline 3 and RLlib. In the *Three-Layer Architecture* section, there will be detailed explanation about how ElegantRL accomplish its role in FinRL perfectly. If interested, please refer to ElegantRL's `GitHub page <https://github.com/AI4Finance-Foundation/ElegantRL>`_ or `documentation <https://elegantrl.readthedocs.io>`_.
+FinRL包含ElegantRL、Stable Baseline 3和RLlib中经过微调的标准DRL算法。ElegantRL是由AI4Finance维护的可扩展且灵活的DRL库，性能比Stable Baseline 3和RLlib更快、更稳定。在*三层架构*部分，将详细解释ElegantRL如何完美完成其在FinRL中的角色。如有兴趣，请参阅ElegantRL的`GitHub页面 <https://github.com/AI4Finance-Foundation/ElegantRL>`_或`文档 <https://elegantrl.readthedocs.io>`_。
 
-With those three powerful DRL libraries, FinRL provides the following algorithms for users:
+凭借这三个强大的DRL库，FinRL为用户提供以下算法：
 
 .. image:: ../../image/alg_compare.png
 
-As mentioned in the introduction, FinRL's DRL agents are built by fine-tuned standard DRL algorithms depending on three famous DRL library: ElegantRL, Stable Baseline 3, and RLlib.
+正如介绍中提到的，FinRL的DRL智能体基于三个著名的DRL库构建：ElegantRL、Stable Baseline 3和RLlib，采用经过微调的标准DRL算法。
 
-The supported algorithms include: DQN, DDPG, Multi-Agent DDPG, PPO, SAC, A2C and TD3. We also allow users to design their own DRL algorithms by adapting these DRL algorithms, e.g., Adaptive DDPG, or employing ensemble methods. The comparison of DRL algorithms is shown in the table bellow:
+支持的算法包括：DQN、DDPG、多智能体DDPG、PPO、SAC、A2C和TD3。我们还允许用户通过调整这些DRL算法（例如自适应DDPG）或采用集成方法来设计自己的DRL算法。DRL算法的比较如下表所示：
 
 .. image:: ../../image/alg_compare.png
    :align: center
 
-Users are able to choose their favorite DRL agents for training. Different DRL agents might have different performance in various tasks.
+用户能够选择自己喜欢的DRL智能体进行训练。不同的DRL智能体在不同任务中可能具有不同的性能。
 
-ElegantRL: DRL library
+ElegantRL：DRL库
 ------------------------
 
 .. image:: ../../image/ElegantRL_icon.jpeg
@@ -27,16 +27,16 @@ ElegantRL: DRL library
     :target: https://github.com/AI4Finance-Foundation/ElegantRL
 
 
-One sentence summary of reinforcement learning (RL): in RL, an agent learns by continuously interacting with an unknown environment, in a trial-and-error manner, making sequential decisions under uncertainty and achieving a balance between exploration (new territory) and exploitation (using knowledge learned from experiences).
+强化学习（RL）的一句话总结：在RL中，智能体通过不断与未知环境交互，以试错的方式学习，在不确定性下做出序列决策，并在探索（新领域）和利用（使用从经验中学到的知识）之间实现平衡。
 
-Deep reinforcement learning (DRL) has great potential to solve real-world problems that are challenging to humans, such as gaming, natural language processing (NLP), self-driving cars, and financial trading. Starting from the success of AlphaGo, various DRL algorithms and applications are emerging in a disruptive manner. The ElegantRL library enables researchers and practitioners to pipeline the disruptive “design, development and deployment” of DRL technology.
+深度强化学习（DRL）在解决对人类具有挑战性的现实世界问题方面具有巨大潜力，例如游戏、自然语言处理（NLP）、自动驾驶汽车和金融交易。从AlphaGo的成功开始，各种DRL算法和应用以颠覆性的方式涌现。ElegantRL库使研究人员和实践者能够流水线化DRL技术的颠覆性'设计、开发和部署'。
 
-The library to be presented is featured with “elegant” in the following aspects:
+所展示的库在以下方面具有'elegant'特色：
 
-    - Lightweight: core codes have less than 1,000 lines, e.g., helloworld.
-    - Efficient: the performance is comparable with Ray RLlib.
-    - Stable: more stable than Stable Baseline 3.
+    - 轻量级：核心代码少于1,000行，例如helloworld。
+    - 高效：性能可与Ray RLlib相媲美。
+    - 稳定：比Stable Baseline 3更稳定。
 
-ElegantRL supports state-of-the-art DRL algorithms, including discrete and continuous ones, and provides user-friendly tutorials in Jupyter notebooks. The ElegantRL implements DRL algorithms under the Actor-Critic framework, where an Agent (a.k.a, a DRL algorithm) consists of an Actor network and a Critic network. Due to the completeness and simplicity of code structure, users are able to easily customize their own agents.
+ElegantRL支持最先进的DRL算法，包括离散和连续算法，并在Jupyter笔记本中提供用户友好的教程。ElegantRL在Actor-Critic框架下实现DRL算法，其中智能体（也称为DRL算法）由Actor网络和Critic网络组成。由于代码结构的完整性和简单性，用户能够轻松自定义自己的智能体。
 
-Please refer to ElegantRL's `GitHub page <https://github.com/AI4Finance-Foundation/ElegantRL>`_ or `documentation <https://elegantrl.readthedocs.io>`_ for more details.
+更多详细信息请参阅ElegantRL的`GitHub页面 <https://github.com/AI4Finance-Foundation/ElegantRL>`_或`文档 <https://elegantrl.readthedocs.io>`_。

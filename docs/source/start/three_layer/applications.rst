@@ -1,5 +1,5 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 ================
-3. Applications
+3. 应用
 ================

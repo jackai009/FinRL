@@ -1,14 +1,14 @@
 :github_url: https://github.com/AI4Finance-LLC/FinRL-Library
 
-Multiple Stock Trading
+多股票交易
 ===============================
 
-Deep Reinforcement Learning for Stock Trading from Scratch: Multiple Stock Trading
+从零开始的股票交易深度强化学习：多股票交易
 
 
 .. tip::
 
-    Run the code step by step at `Google Colab`_.
+    在`Google Colab`_上逐步运行代码。
 
     .. _Google Colab: https://colab.research.google.com/github/AI4Finance-Foundation/FinRL/blob/master/FinRL_StockTrading_NeurIPS_2018.ipynb
 

@@ -1,17 +1,17 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 =================
-Section 1. Data
+第1节. 数据
 =================
 
-Part 1. Install Packages
+第1部分. 安装包
 ==================================
 ..  code-block:: python
-    ## install required packages
+    ## 安装所需包
     !pip install swig
     !pip install wrds
     !pip install pyportfolioopt
-    ## install finrl library
+    ## 安装finrl库
     !pip install git+https://github.com/AI4Finance-Foundation/FinRL.git
 
 ..  code-block:: python

@@ -1,5 +1,5 @@
-# Disclaimer: Nothing herein is financial advice, and NOT a recommendation to trade real money. Many platforms exist for simulated trading (paper trading) which can be used for building and developing the methods discussed. Please use common sense and always first consult a professional before trading or investing.
-# Setup Alpaca Paper trading environment
+# 免责声明：本文内容并非财务建议，也不推荐进行真实货币交易。存在许多用于模拟交易（纸面交易）的平台，可用于构建和开发讨论的方法。请使用常识，在交易或投资前始终首先咨询专业人士。
+# 设置Alpaca纸面交易环境
 from __future__ import annotations
 
 import datetime

@@ -1,16 +1,16 @@
 :github_url: https://github.com/AI4Finance-LLC/FinRL-Library
 
-Portfolio Allocation
+投资组合分配
 ===================================
 
-**Our paper**:
+**我们的论文**：
 `FinRL: A Deep Reinforcement Learning Library for Automated Stock Trading in Quantitative Finance`_.
 
 .. _FinRL\: A Deep Reinforcement Learning Library for Automated Stock Trading in Quantitative Finance: https://arxiv.org/abs/2011.09607
 
-Presented at NeurIPS 2020: Deep RL Workshop.
+在NeurIPS 2020：深度强化学习研讨会上展示。
 
-The Jupyter notebook codes are available on our Github_ and `Google Colab`_.
+Jupyter笔记本代码可在我们的Github_和`Google Colab`_上找到。
 
 .. _Github: https://github.com/AI4Finance-LLC/FinRL-Library
 .. _Google Colab: https://colab.research.google.com/github/AI4Finance-LLC/FinRL-Library/blob/master/FinRL_multiple_stock_trading.ipynb
