@@ -1,18 +1,19 @@
-# Disclaimer: Nothing herein is financial advice, and NOT a recommendation to trade real money. Many platforms exist for simulated trading (paper trading) which can be used for building and developing the methods discussed. Please use common sense and always first consult a professional before trading or investing.
-# install finrl library
+# 免责声明：本文内容不构成任何财务建议，也不是进行真实交易的推荐。存在许多模拟交易（纸面交易）平台，可用于构建和开发所讨论的方法。请在交易或投资前使用常识，并始终先咨询专业人士。
+
+# 安装finrl库
 # %pip install --upgrade git+https://github.com/AI4Finance-Foundation/FinRL.git
-# Alpaca keys
+# Alpaca密钥
 from __future__ import annotations
 
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("data_key", help="data source api key")
-parser.add_argument("data_secret", help="data source api secret")
-parser.add_argument("data_url", help="data source api base url")
-parser.add_argument("trading_key", help="trading api key")
-parser.add_argument("trading_secret", help="trading api secret")
-parser.add_argument("trading_url", help="trading api base url")
+parser.add_argument("data_key", help="数据源API密钥")
+parser.add_argument("data_secret", help="数据源API密钥")
+parser.add_argument("data_url", help="数据源API基础URL")
+parser.add_argument("trading_key", help="交易API密钥")
+parser.add_argument("trading_secret", help="交易API密钥")
+parser.add_argument("trading_url", help="交易API基础URL")
 args = parser.parse_args()
 DATA_API_KEY = args.data_key
 DATA_API_SECRET = args.data_secret
@@ -33,12 +34,12 @@ from finrl.meta.paper_trading.alpaca import PaperTradingAlpaca
 from finrl.meta.paper_trading.common import train, test, alpaca_history, DIA_history
 from finrl.config import INDICATORS
 
-# Import Dow Jones 30 Symbols
+# 导入道琼斯30指数成分股
 from finrl.config_tickers import DOW_30_TICKER
 
 ticker_list = DOW_30_TICKER
 env = StockTradingEnv
-# if you want to use larger datasets (change to longer period), and it raises error, please try to increase "target_step". It should be larger than the episode steps.
+# 如果您想使用更大的数据集（更改为更长的时间段），并且出现错误，请尝试增加"target_step"。它应该大于episode步数。
 ERL_PARAMS = {
     "learning_rate": 3e-6,
     "batch_size": 2048,
@@ -50,9 +51,9 @@ ERL_PARAMS = {
     "eval_times": 1,
 }
 
-# Set up sliding window of 6 days training and 2 days testing
+# 设置6天训练和2天测试的滑动窗口
 import datetime
-from pandas.tseries.offsets import BDay  # BDay is business day, not birthday...
+from pandas.tseries.offsets import BDay  # BDay是工作日，不是生日...
 
 today = datetime.datetime.today()
 
@@ -92,7 +93,7 @@ train(
     API_SECRET=DATA_API_SECRET,
     API_BASE_URL=DATA_API_BASE_URL,
     erl_params=ERL_PARAMS,
-    cwd="./papertrading_erl",  # current_working_dir
+    cwd="./papertrading_erl",  # 当前工作目录
     break_step=1e5,
 )
 
@@ -115,7 +116,7 @@ account_value_erl = test(
 )
 
 train(
-    start_date=TRAINFULL_START_DATE,  # After tuning well, retrain on the training and testing sets
+    start_date=TRAINFULL_START_DATE,  # 调优完成后，在训练集和测试集上重新训练
     end_date=TRAINFULL_END_DATE,
     ticker_list=ticker_list,
     data_source="alpaca",
@@ -136,7 +137,7 @@ train(
 action_dim = len(DOW_30_TICKER)
 state_dim = (
     1 + 2 + 3 * action_dim + len(INDICATORS) * action_dim
-)  # Calculate the DRL state dimension manually for paper trading. amount + (turbulence, turbulence_bool) + (price, shares, cd (holding time)) * stock_dim + tech_dim
+)  # 手动计算纸面交易的DRL状态维度。金额 + (波动率, 波动率布尔值) + (价格, 持仓, cd (持仓时间)) * 股票维度 + 技术指标维度
 
 paper_trading_erl = PaperTradingAlpaca(
     ticker_list=DOW_30_TICKER,
@@ -157,34 +158,34 @@ paper_trading_erl = PaperTradingAlpaca(
 
 paper_trading_erl.run()
 
-# Check Portfolio Performance
-# ## Get cumulative return
+# 检查投资组合表现
+# ## 获取累计收益率
 df_erl, cumu_erl = alpaca_history(
     key=DATA_API_KEY,
     secret=DATA_API_SECRET,
     url=DATA_API_BASE_URL,
-    start="2022-09-01",  # must be within 1 month
+    start="2022-09-01",  # 必须在1个月内
     end="2022-09-12",
-)  # change the date if error occurs
+)  # 如果出现错误，请更改日期
 
 df_djia, cumu_djia = DIA_history(start="2022-09-01")
 returns_erl = cumu_erl - 1
 returns_dia = cumu_djia - 1
 returns_dia = returns_dia[: returns_erl.shape[0]]
 
-# plot and save
+# 绘图并保存
 import matplotlib.pyplot as plt
 
 plt.figure(dpi=1000)
 plt.grid()
 plt.grid(which="minor", axis="y")
-plt.title("Stock Trading (Paper trading)", fontsize=20)
-plt.plot(returns_erl, label="ElegantRL Agent", color="red")
-# plt.plot(returns_sb3, label = 'Stable-Baselines3 Agent', color = 'blue' )
-# plt.plot(returns_rllib, label = 'RLlib Agent', color = 'green')
-plt.plot(returns_dia, label="DJIA", color="grey")
-plt.ylabel("Return", fontsize=16)
-plt.xlabel("Year 2021", fontsize=16)
+plt.title("股票交易（纸面交易）", fontsize=20)
+plt.plot(returns_erl, label="ElegantRL智能体", color="red")
+# plt.plot(returns_sb3, label = 'Stable-Baselines3智能体', color = 'blue' )
+# plt.plot(returns_rllib, label = 'RLlib智能体', color = 'green')
+plt.plot(returns_dia, label="道琼斯工业指数", color="grey")
+plt.ylabel("收益率", fontsize=16)
+plt.xlabel("2021年", fontsize=16)
 plt.xticks(size=14)
 plt.yticks(size=14)
 ax = plt.gca()
