@@ -27,30 +27,30 @@ from finrl.config import INDICATORS
 
 import itertools
 
-Part 2. Fetch data
+第2部分. 获取数据
 ==================================
 
-`yfinance <https://github.com/ranaroussi/yfinance>`_ is an open-source library that provides APIs fetching historical data form Yahoo Finance. In FinRL, we have a class called YahooDownloader that use yfinance to fetch data from Yahoo Finance.
+`yfinance <https://github.com/ranaroussi/yfinance>`_ 是一个开源库,提供从Yahoo Finance获取历史数据的API。在FinRL中,我们有一个名为YahooDownloader的类,它使用yfinance从Yahoo Finance获取数据。
 
-**OHLCV**: Data downloaded are in the form of OHLCV, corresponding to **open, high, low, close, volume,** respectively. OHLCV is important because they contain most of numerical information of a stock in time series. From OHLCV, traders can get further judgement and prediction like the momentum, people's interest, market trends, etc.
+**OHLCV**:下载的数据形式为OHLCV,分别对应**开盘价、最高价、最低价、收盘价、成交量**。OHLCV很重要,因为它们包含股票时间序列中的大部分数值信息。从OHLCV,交易者可以进一步判断和预测,如动量、人们的兴趣、市场趋势等。
 
-Data for a single ticker
+单个股票代码的数据
 ----------------------------------------
 
-**using yfinance**
+**使用yfinance**
 ..  code-block:: python
     aapl_df_yf = yf.download(tickers = "aapl", start='2020-01-01', end='2020-01-31')
 
-**using FinRL**
+**使用FinRL**
 
-In FinRL's YahooDownloader, we modified the data frame to the form that convenient for further data processing process. We use adjusted close price instead of close price, and add a column representing the day of a week (0-4 corresponding to Monday-Friday).
+在FinRL的YahooDownloader中,我们将数据框修改为便于进一步数据处理的格式。我们使用调整后的收盘价而不是收盘价,并添加一个表示一周中某天的列(0-4对应星期一至星期五)。
 
 ..  code-block:: python
     aapl_df_finrl = YahooDownloader(start_date = '2020-01-01',
                                     end_date = '2020-01-31',
                                     ticker_list = ['aapl']).fetch_data()
 
-Data for the chosen ticker
+选定股票代码的数据
 ----------------------------------------
 ..  code-block:: python
     TRAIN_START_DATE = '2009-01-01'
@@ -62,12 +62,12 @@ Data for the chosen ticker
                              end_date = TRADE_END_DATE,
                              ticker_list = config_tickers.DOW_30_TICKER).fetch_data()
 
-Part 3. Preprocess Data
+第3部分. 预处理数据
 ==================================
 
-We need to check for missing data and do feature engineering to convert the data point into a state.
+我们需要检查缺失的数据并进行特征工程,将数据点转换为状态。
 
-- **Adding technical indicators**. In practical trading, various information needs to be taken into account, such as historical prices, current holding shares, technical indicators, etc. Here, we demonstrate two trend-following technical indicators: MACD and RSI.
-- **Adding turbulence index**. Risk-aversion reflects whether an investor prefers to protect the capital. It also influences one's trading strategy when facing different market volatility level. To control the risk in a worst-case scenario, such as financial crisis of 2007–2008, FinRL employs the turbulence index that measures extreme fluctuation of asset price.
+- **添加技术指标**。在实际交易中,需要考虑各种信息,如历史价格、当前持有股份、技术指标等。在这里,我们演示两个趋势跟踪技术指标:MACD和RSI。
+- **添加动荡指数**。风险厌恶反映了投资者是否更倾向于保护资本。它还影响一个人在面对不同市场波动水平时的交易策略。为了在最坏情况下控制风险,例如2007-2008年的金融危机,FinRL采用了衡量资产价格极端波动的动荡指数。
 
-Hear let's take MACD as an example. Moving average convergence/divergence (MACD) is one of the most commonly used indicator showing bull and bear market. Its calculation is based on EMA (Exponential Moving Average indicator, measuring trend direction over a period of time.)
+让我们以MACD为例。移动平均收敛/发散(MACD)是最常用的指标之一,显示牛市和熊市。其计算基于EMA(指数移动平均指标,衡量一段时间内的趋势方向)。

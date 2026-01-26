@@ -1,64 +1,64 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 ============================
-Contributing Guidelines
+贡献指南
 ============================
 
 
 
-This project aims to bring a reinforcement learning environment to the trading community.
-There are always competing priorities among the community, and we want to make sure that we are able to achieve together a project that is reliable, sustainable, and maintainable.
+本项目旨在为交易社区提供强化学习环境。
+社区中始终存在竞争性的优先事项,我们要确保能够共同实现一个可靠、可持续和可维护的项目。
 
-Guiding Principles
+指导原则
 =======
 
-* We should have reliable codes in this project
-    * reliable code with tests
-    * reliable code that works
-    * reliable code runs without consuming excessive resources
-* We should help each other to achieve SOTA results together
-* We should write clear codes
-    * Code should not be redundant
-    * Code should have documentation inline (standard pep format)
-    * Code should be organized into classes and functions
-* We should leverage outside tools as it makes sense
-* We work together, and are kind, patient, and clear in our communication. Jerks are not welcome.
+* 我们应该在这个项目中有可靠的代码
+    * 带有测试的可靠代码
+    * 能够正常工作的可靠代码
+    * 不会消耗过多资源的可靠代码
+* 我们应该相互帮助,共同实现最先进的结果
+* 我们应该编写清晰的代码
+    * 代码不应冗余
+    * 代码应包含内联文档(标准PEP格式)
+    * 代码应组织为类和函数
+* 我们应该合理地利用外部工具
+* 我们共同工作,在交流中友善、耐心和清晰。不受欢迎粗鲁的人。
 
-## If you see something, say something!
-* Filing an [issue](https://guides.github.com/features/issues/) is a great way to help improve the project
+## 如果发现问题,请说出来!
+* 提交[issue](https://guides.github.com/features/issues/)是帮助改进项目的好方法
 
 
-Accepting PRs
+接受PR
 =======
 
-* You found a bug and a way to fix it
-* You have contributed to an issue that was prioritized by the coordinators of this project
-* You have new functionality that you're adding that you've written issues for and has documentation + Tests
+* 你发现了一个bug以及修复它的方法
+* 你为该项目协调员优先考虑的问题做出了贡献
+* 你要添加新功能,并且已经为此编写了issue,并且有文档+测试
 
-PR Guidelines
+PR指南
 =======
 
-* Please tag @bruceyang, @spencerromo, or @xiaoyang in every PR. (P.S. we're looking for more collaborators with software experience!)
-* Please reference or write and reference an [issue](https://guides.github.com/features/issues/)
-* Please have clear commit messages
-* Please write detailed documentation and tests for every added piece of functionality
-* Please try to not break existing functionality, or if you need to, please plan to justify this necessity and coordinate with the collaborators
-* Please be patient and respectful with feedback
-* Please use pre-commit hooks
+* 请在每个PR中标记@bruceyang、@spencerromo或@xiaoyang。(P.S.我们正在寻找更多有软件经验的合作者!)
+* 请引用或编写并引用一个[issue](https://guides.github.com/features/issues/)
+* 请使用清晰的提交消息
+* 请为每个添加的功能编写详细的文档和测试
+* 请尽量不要破坏现有功能,或者如果需要,请计划证明这种必要性并与合作者协调
+* 请对反馈保持耐心和尊重
+* 请使用pre-commit钩子
 
 
-Others
+其他
 =======
 
--Using pre-commit
+-使用pre-commit
 ```
 pip install pre-commit
 pre-commit install
 ```
 
--Running Tests
+-运行测试
 ```
--Locally
+-本地
 python3 -m unittest discover
 
 -Docker

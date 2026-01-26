@@ -1,15 +1,15 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 =================
-File Architecture
+文件架构
 =================
 
-FinRL's file architecture strictly follow the :ref:`three-layer architecture`.
+FinRL的文件架构严格遵循:ref:`三层架构`。
 
 .. code:: bash
 
     FinRL
-    ├── finrl (the main folder)
+    ├── finrl (主文件夹)
     │   ├── applications
     │   	├── cryptocurrency_trading
     │   	├── high_frequency_trading

@@ -96,9 +96,7 @@ class DRLAgent:
                 model.eval_times = model_kwargs.get("eval_times", 2**5)
                 model.eval_per_step = int(2e4)
             except BaseException:
-                raise ValueError(
-                    "读取参数失败，请检查'model_kwargs'输入。"
-                )
+                raise ValueError("读取参数失败，请检查'model_kwargs'输入。")
         return model
 
     def train_model(self, model, cwd, total_timesteps=5000):

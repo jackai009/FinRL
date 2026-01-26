@@ -1,571 +1,504 @@
 :github_url: https://github.com/AI4Finance-LLC/FinRL-Library
 
 单股票交易
-============================
+===================================
 
-从零开始的股票交易深度强化学习：单股票交易
+**我们的论文**：
+`FinRL: A Deep Reinforcement Learning Library for Automated Stock Trading in Quantitative Finance`_.
 
+.. _FinRL\: A Deep Reinforcement Learning Library for Automated Stock Trading in Quantitative Finance: https://arxiv.org/abs/2011.09607
+
+在NeurIPS 2020:深度强化学习研讨会上展示。
+
+Jupyter笔记本代码可在我们的Github_和`Google Colab`_上找到。
+
+.. _Github: https://github.com/AI4Finance-LLC/FinRL-Library
+.. _Google Colab: https://colab.research.google.com/github/AI4Finance-LLC/FinRL-Library/blob/master/FinRL_single_stock_trading.ipynb
 
 .. tip::
 
-    在`Google Colab`_上逐步运行代码。
+    - FinRL `Single Stock Trading <https://colab.research.google.com/github/AI4Finance-LLC/FinRL-Library/blob/master/FinRL_single_stock_trading.ipynb>`_ at Google Colab.
 
-    .. _Google Colab: https://colab.research.google.com/github/AI4Finance-LLC/FinRL-Library/blob/master/examples/old/DRL_single_stock_trading.ipynb
+    - FinRL `Multiple Stocks Trading <https://colab.research.google.com/github/AI4Finance-LLC/FinRL-Library/blob/master/FinRL_multiple_stock_trading.ipynb>`_ at Google Colab:
 
-
-
-
-
-步骤1：准备工作
----------------------------------------
-
-**步骤1.1：概述**
-
-As deep reinforcement learning (DRL) has been recognized as an effective approach in quantitative finance, getting hands-on experiences is attractive to beginners. However, to train a practical DRL trading agent that decides where to trade, at what price, and what quantity involves error-prone and arduous development and debugging.
-
-We introduce a DRL library FinRL that facilitates beginners to expose themselves to quantitative finance and to develop their own stock trading strategies. Along with easily-reproducible tutorials, FinRL library allows users to streamline their own developments and to compare with existing schemes easily.
-
-FinRL is a beginner-friendly library with fine-tuned standard DRL algorithms. It has been developed under three primary principles:
-
-    - Completeness: Our library shall cover components of the DRL framework completely, which is a fundamental requirement;
-
-    - Hands-on tutorials: We aim for a library that is friendly to beginners. Tutorials with detailed walk-through will help users to explore the functionalities of our library;
-
-    - Reproducibility: Our library shall guarantee reproducibility to ensure the transparency and also provide users with confidence in what they have done
-
-This article is focusing on one of the use cases in our paper: Single Stock Trading. We use one Jupyter notebook to include all the necessary steps.
-
-We use Apple Inc. stock: AAPL as an example throughout this article, because it is one of the most popular stocks.
-
-.. image:: ../../image/FinRL-Architecture.png
-
-**Step 1.2: Problem Definition**
+查看我们之前的教程:`Multiple Stock Trading <https://finrl.readthedocs.io/en/latest/tutorial/MultipleStockTrading.html>`_和`Portfolio Allocation <https://finrl.readthedocs.io/en/latest/tutorial/PortfolioAllocation.html>`_以获取FinRL架构和模块的详细解释。
 
 
-This problem is to design an automated trading solution for single stock trading. We model the stock trading process as a Markov Decision Process (MDP). We then formulate our trading goal as a maximization problem.
 
-The components of the reinforcement learning environment are:
+概述
+-------------
 
-    - Action: The action space describes the allowed actions that the agent interacts with the environment. Normally, a ∈ A includes three actions: a ∈ {−1, 0, 1}, where −1, 0, 1 represent selling, holding, and buying one stock. Also, an action can be carried upon multiple shares. We use an action space {−k, …, −1, 0, 1, …, k}, where k denotes the number of shares. For example, “Buy 10 shares of AAPL” or “Sell 10 shares of AAPL” are 10 or −10, respectively
+首先,我们想解释使用深度强化学习进行单股票交易的逻辑。我们在本文中以Apple(AAPL)股票为例,因为它是最受欢迎的股票之一。
 
-    - Reward function: r(s, a, s′) is the incentive mechanism for an agent to learn a better action. The change of the portfolio value when action a is taken at state s and arriving at new state s’, i.e., r(s, a, s′) = v′ − v, where v′ and v represent the portfolio values at state s′ and s, respectively
+假设我们在2019年初获得了100万美元。我们想将这1,000,000美元投资于股票市场,在这种情况下是Apple(AAPL)股票。假设没有保证金交易,没有卖空,没有国库券(使用所有资金仅交易AAPL股票)。
 
-    - State: The state space describes the observations that the agent receives from the environment. Just as a human trader needs to analyze various information before executing a trade, so our trading agent observes many different features to better learn in an interactive environment.
+我们聘请了一位聪明的投资组合经理——深度强化学习先生。DRL先生每天都会给我们建议,包括应该买入或卖出多少AAPL股票。所以我们每天只需要根据DRL先生的建议执行买入或卖出操作。基本逻辑如下。
+.. image:: ../../image/single_stock_trading.png
 
-    - Environment: single stock trading for AAPL
+单股票交易与多股票交易不同,因为我们只专注于一只股票,这简化了决策过程。
+
+我们介绍一个DRL库FinRL,它促进初学者接触量化金融。FinRL是一个专门为自动化股票交易设计的DRL库,致力于教育和演示目的。
+
+本文重点关注我们论文中的用例之一:单股票交易。我们使用一个Jupyter notebook来包含所有必要的步骤。
 
 
-The data of the single stock that we will be using for this case study is obtained from Yahoo Finance API. The data contains Open-High-Low-Close price and volume.
+
+问题定义
+--------------------------
+
+这个问题是设计用于股票交易的自动化解决方案。我们将股票交易过程建模为马尔可夫决策过程(MDP)。然后我们将我们的交易目标制定为最大化问题。
+
+强化学习环境的组件包括:
+
+    - **Action**: {卖出k股, 持有, 买入k股},其中k可以是任何整数。连续动作空间需要归一化为[-1, 1],因为策略定义在高斯分布上,这需要归一化和对称。
+
+    - **State: {账户余额, 当前股价, MACD, RSI, CCI, ADX}**。状态空间描述了代理从环境接收的观察。
+
+    - **Reward function**: r(s, a, s′) = V(t+1) - V(t),其中V是投资组合价值,包括现金余额和股票价值。奖励是在状态s下采取动作a并到达新状态s'时的投资组合价值变化。
+
+    - **Environment**:Apple(AAPL)股票的交易环境。
+
+本案例研究中股票的数据是从Yahoo Finance API获取的。数据包含开盘价-最高价-最低价-收盘价和成交量。
 
 
-**Step 1.3: Python Package Installation**
 
+Load Python Packages
+--------------------------
 
-As a first step we check if the additional packages needed are present, if not install them.
-
-    - Yahoo Finance API
-    - pandas
-    - matplotlib
-    - stockstats
-    - OpenAI gym
-    - stable-baselines
-    - tensorflow
-
-.. code-block::
-    :linenos:
-
-    import pkg_resources
-    import pip
-    installedPackages = {pkg.key for pkg in pkg_resources.working_set}
-    required = {'yfinance', 'pandas', 'matplotlib', 'stockstats','stable-baselines','gym','tensorflow'}
-    missing = required - installedPackages
-    if missing:
-        !pip install yfinance
-        !pip install pandas
-        !pip install matplotlib
-        !pip install stockstats
-        !pip install gym
-        !pip install stable-baselines[mpi]
-        !pip install tensorflow==1.15.4
-
-**Step 1.4: Import packages**
+安装FinRL的不稳定开发版本:
 
 .. code-block:: python
-    :linenos:
+   :linenos:
 
-    import yfinance as yf
-    from stockstats import StockDataFrame as Sdf
+    # 在Jupyter notebook中安装不稳定开发版本:
+    !pip install git+https://github.com/AI4Finance-LLC/FinRL-Library.git
 
+导入包:
+
+.. code-block:: python
+   :linenos:
+
+    # 导入包
     import pandas as pd
+    import numpy as np
+    import matplotlib
     import matplotlib.pyplot as plt
+    matplotlib.use('Agg')
+    import datetime
 
-    import gym
-    from stable_baselines import PPO2, DDPG, A2C, ACKTR, TD3
-    from stable_baselines import DDPG
-    from stable_baselines import A2C
-    from stable_baselines import SAC
-    from stable_baselines.common.vec_env import DummyVecEnv
-    from stable_baselines.common.policies import MlpPolicy
+    from finrl import config
+    from finrl import config_tickers
+    from finrl.marketdata.yahoodownloader import YahooDownloader
+    from finrl.preprocessing.preprocessors import FeatureEngineer
+    from finrl.preprocessing.data import data_split
+    from finrl.env.environment import EnvSetup
+    from finrl.env.EnvSingleStock_train import StockEnvTrain
+    from finrl.env.EnvSingleStock_trade import StockEnvTrade
+    from finrl.model.models import DRLAgent
+    from finrl.trade.backtest import BackTestStats, BaselineStats, BackTestPlot, backtest_strat, baseline_strat
+    from finrl.trade.backtest import backtest_strat, baseline_strat
+
+    import os
+    if not os.path.exists("./" + config.DATA_SAVE_DIR):
+        os.makedirs("./" + config.DATA_SAVE_DIR)
+    if not os.path.exists("./" + config.TRAINED_MODEL_DIR):
+        os.makedirs("./" + config.TRAINED_MODEL_DIR)
+    if not os.path.exists("./" + config.TENSORBOARD_LOG_DIR):
+        os.makedirs("./" + config.TENSORBOARD_LOG_DIR)
+    if not os.path.exists("./" + config.RESULTS_DIR):
+        os.makedirs("./" + config.RESULTS_DIR)
 
 
-步骤2：下载数据
----------------------------------------
 
-`Yahoo Finance`_ is a website that provides stock data, financial news, financial reports, etc. All the data provided by Yahoo Finance is free.
+下载数据
+--------------------------
 
-`This Medium blog`_ explains how to use Yahoo Finance API to extract data directly in Python.
-
-.. _Yahoo Finance: https://finance.yahoo.com/
-.. _This Medium blog: https://towardsdatascience.com/free-stock-data-for-python-using-yahoo-finance-api-9dafd96cad2e
-
-    - FinRL uses a class YahooDownloader to fetch data from Yahoo Finance API
-
-    - Call Limit: Using the Public API (without authentication), you are limited to 2,000 requests per hour per IP (or up to a total of 48,000 requests a day).
-
-We can either download the stock data like open-high-low-close price manually by entering a stock ticker symbol like AAPL into the website search bar, or we just use Yahoo Finance API to extract data automatically.
-
-
-FinRL uses a YahooDownloader_ class to extract data.
-
-.. _YahooDownloader: https://github.com/AI4Finance-LLC/FinRL-Library/blob/master/finrl/marketdata/yahoodownloader.py
+FinRL使用YahooDownloader类来提取数据。
 
 .. code-block:: python
 
     class YahooDownloader:
         """
-        Provides methods for retrieving daily stock data from Yahoo Finance API
+            提供从Yahoo Finance API检索每日股票数据的方法
 
-        Attributes
-        ----------
-            start_date : str
-                start date of the data (modified from config.py)
-            end_date : str
-                end date of the data (modified from config.py)
-            ticker_list : list
-                a list of stock tickers (modified from config.py)
+            属性
+            ----------
+                start_date : str
+                    数据的开始日期(从config.py修改)
+                end_date : str
+                    数据的结束日期(从config.py修改)
+                ticker_list : list
+                    股票代码列表(从config.py修改)
 
-        Methods
-        -------
-            fetch_data()
-                Fetches data from yahoo API
+            方法
+            -------
+                fetch_data()
+                    从yahoo API获取数据
         """
 
-Download and save the data in a pandas DataFrame:
+下载并将数据保存在pandas DataFrame中:
 
 .. code-block:: python
    :linenos:
 
-    # Download and save the data in a pandas DataFrame:
+    # 下载并将数据保存在pandas DataFrame中:
     df = YahooDownloader(start_date = '2009-01-01',
-                              end_date = '2020-09-30',
-                              ticker_list = config_tickers.DOW_30_TICKER).fetch_data()
-
-    print(df.sort_values(['date','tic'],ignore_index=True).head(30))
+                         end_date = '2020-12-01',
+                         ticker_list = ['AAPL']).fetch_data()
 
 
-.. image:: ../../image/single_1.png
+预处理数据
+--------------------------
 
-
-
-步骤3：预处理数据
----------------------------------------
-
-Data preprocessing is a crucial step for training a high quality machine learning model. We need to check for missing data and do feature engineering in order to convert the data into a model-ready state.
-
-    - FinRL uses a FeatureEngineer class to preprocess the data
-
-    - Add technical indicators. In practical trading, various information needs to be taken into account, for example the historical stock prices, current holding shares, technical indicators, etc.
-
-**Calculate technical indicators**
-
-In practical trading, various information needs to be taken into account, for example the historical stock prices, current holding shares, technical indicators, etc.
-
-    - FinRL uses stockstats to calcualte technical indicators such as Moving Average Convergence Divergence (MACD), Relative Strength Index (RSI), Average Directional Index (ADX), Commodity Channel Index (CCI) and other various indicators and stats.
-
-    - stockstats: supplies a wrapper StockDataFrame based on the pandas.DataFrame with inline stock statistics/indicators support.
-
-    - we store the stockstats technical indicator column names in config.py
-
-    - config.INDICATORS = [‘macd’, ‘rsi_30’, ‘cci_30’, ‘dx_30’]
-
-    - User can add more technical indicators, check https://github.com/jealous/stockstats for different names
-
-FinRL uses a FeatureEngineer_ class to preprocess data.
-
-.. _FeatureEngineer: https://github.com/AI4Finance-LLC/FinRL-Library/blob/master/finrl/preprocessing/preprocessors.py
+FinRL使用FeatureEngineer类来预处理数据。
 
 .. code-block:: python
 
     class FeatureEngineer:
         """
-        Provides methods for preprocessing the stock price data
+            提供预处理股票价格数据的方法
 
-        Attributes
-        ----------
-            df: DataFrame
-                data downloaded from Yahoo API
-            feature_number : int
-                number of features we used
-            use_technical_indicator : boolean
-                we technical indicator or not
-            use_turbulence : boolean
-                use turbulence index or not
+            属性
+            ----------
+                df: DataFrame
+                    从Yahoo API下载的数据
+                feature_number : int
+                    我们使用的特征数量
+                use_technical_indicator : boolean
+                    使用技术指标或不使用
+                use_turbulence : boolean
+                    使用动荡指数或不使用
 
-        Methods
-        -------
-            preprocess_data()
-                main method to do the feature engineering
+            方法
+            -------
+                preprocess_data()
+                    进行特征工程的主要方法
         """
 
-Perform Feature Engineering:
+执行特征工程:
 
 .. code-block:: python
    :linenos:
 
-    # Perform Feature Engineering:
+    # 执行特征工程:
     df = FeatureEngineer(df.copy(),
-                         use_technical_indicator=True,
-                         tech_indicator_list = config.INDICATORS,
-                         use_turbulence=True,
-                         user_defined_feature = False).preprocess_data()
+                        use_technical_indicator=True,
+                        use_turbulence=False).preprocess_data()
 
+构建环境
+--------------------------
 
+FinRL使用EnvSetup类来设置环境。
 
-步骤4：构建环境
----------------------------------------
-
-Considering the stochastic and interactive nature of the automated stock trading tasks, a financial task is modeled as a Markov Decision Process (MDP) problem. The training process involves observing stock price change, taking an action and reward’s calculation to have the agent adjusting its strategy accordingly. By interacting with the environment, the trading agent will derive a trading strategy with the maximized rewards as time proceeds.
-
-Our trading environments, based on OpenAI Gym framework, simulate live stock markets with real market data according to the principle of time-driven simulation.
-
-Environment design is one of the most important part in DRL, because it varies a lot from applications to applications and from markets to markets. We can’t use an environment for stock trading to trade bitcoin, and vice versa.
-
-The action space describes the allowed actions that the agent interacts with the environment. Normally, action a includes three actions: {-1, 0, 1}, where -1, 0, 1 represent selling, holding, and buying one share. Also, an action can be carried upon multiple shares. We use an action space {-k,…,-1, 0, 1, …, k}, where k denotes the number of shares to buy and -k denotes the number of shares to sell. For example, “Buy 10 shares of AAPL” or “Sell 10 shares of AAPL” are 10 or -10, respectively. The continuous action space needs to be normalized to [-1, 1], since the policy is defined on a Gaussian distribution, which needs to be normalized and symmetric.
-
-In this article, I set k=200, the entire action space is 200*2+1 = 401 for AAPL.
-
-FinRL uses a EnvSetup_ class to setup environment.
-
-.. _EnvSetup: https://github.com/AI4Finance-LLC/FinRL-Library/blob/master/finrl/env/environment.py
 
 .. code-block:: python
 
     class EnvSetup:
-
         """
-        Provides methods for retrieving daily stock data from
-        Yahoo Finance API
+            提供从Yahoo Finance API检索每日股票数据的方法
 
-        Attributes
-        ----------
-            stock_dim: int
-                number of unique stocks
-            hmax : int
-                maximum number of shares to trade
-            initial_amount: int
-                start money
-            transaction_cost_pct : float
-                transaction cost percentage per trade
-            reward_scaling: float
-                scaling factor for reward, good for training
-            tech_indicator_list: list
-                a list of technical indicator names (modified from config.py)
-        Methods
-        -------
-            fetch_data()
-                Fetches data from yahoo API
+            属性
+            ----------
+                stock_dim: int
+                    唯一股票数量
+                hmax : int
+                    交易的最大股份数
+                initial_amount: int
+                    初始资金
+                transaction_cost_pct : float
+                    每笔交易的交易费用百分比
+                reward_scaling: float
+                    奖励缩放因子,有利于训练
+                tech_indicator_list: list
+                    技术指标名称列表(从config.py修改)
+        方法
+            -------
+                create_env_training()
+                    创建用于训练的env类
+                create_env_validation()
+                    创建用于验证的env类
+                create_env_trading()
+                    创建用于交易的env类
         """
 
 
-Initialize an environment class:
+初始化一个环境类:
+
+用户定义的环境:模拟环境类。用于单股票交易的环境:
 
 .. code-block:: python
    :linenos:
 
-    # Initialize env:
-    env_setup = EnvSetup(stock_dim = stock_dimension,
-                         state_space = state_space,
-                         hmax = 100,
-                         initial_amount = 1000000,
-                         transaction_cost_pct = 0.001,
-                         tech_indicator_list = config.INDICATORS)
+    import numpy as np
+    import pandas as pd
+    from gym.utils import seeding
+    import gym
+    from gym import spaces
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
 
-    env_train = env_setup.create_env_training(data = train,
-                                             env_class = StockEnvTrain)
-
-
-
-User-defined Environment: a simulation environment class.
-
-FinRL provides blueprint for `single stock trading environment`_.
-
-.. _single stock trading environment: https://github.com/AI4Finance-LLC/FinRL-Library/blob/master/finrl/env/EnvSingleStock.py
-
-.. code-block:: python
-
-    class SingleStockEnv(gym.Env):
-        """
-        A single stock trading environment for OpenAI gym
-
-        Attributes
+    class StockEnvSingle(gym.Env):
+        """用于OpenAI gym的单股票交易环境
+        属性
         ----------
             df: DataFrame
-                input data
+                    输入数据
             stock_dim : int
-                number of unique stocks
+                    唯一股票数量
             hmax : int
-                maximum number of shares to trade
+                    交易的最大股份数
             initial_amount : int
-                start money
+                    初始资金
             transaction_cost_pct: float
-                transaction cost percentage per trade
+                    每笔交易的交易费用百分比
             reward_scaling: float
-                scaling factor for reward, good for training
+                    奖励缩放因子,有利于训练
             state_space: int
-                the dimension of input features
+                    输入特征的维度
             action_space: int
-                equals stock dimension
+                    动作空间的维度
             tech_indicator_list: list
-                a list of technical indicator names
+                    技术指标名称列表
             turbulence_threshold: int
-                a threshold to control risk aversion
+                    控制风险厌恶的阈值
             day: int
-                an increment number to control date
-
-        Methods
+                    控制日期的递增数字
+        方法
         -------
             _sell_stock()
-                perform sell action based on the sign of the action
+                根据动作的符号执行卖出操作
             _buy_stock()
-                perform buy action based on the sign of the action
+                根据动作的符号执行买入操作
             step()
-                at each step the agent will return actions, then
-                we will calculate the reward, and return the next
-                observation.
+                在每个步骤,代理将返回动作,然后
+                我们将计算奖励,并返回下一个观察。
             reset()
-                reset the environment
+                重置环境
             render()
-                use render to return other functions
+                使用render返回其他函数
             save_asset_memory()
-                return account value at each time step
+                返回每个时间步的账户价值
             save_action_memory()
-                return actions/positions at each time step
+                返回每个时间步的动作/位置
+
         """
+        metadata = {'render.modes': ['human']}
 
-Tutorial for how to design a customized trading environment will be pulished in the future soon.
+        def __init__(self,
+                    df,
+                    stock_dim,
+                    hmax,
+                    initial_amount,
+                    transaction_cost_pct,
+                    reward_scaling,
+                    state_space,
+                    action_space,
+                    tech_indicator_list,
+                    turbulence_threshold,
+                    day = 0):
+            self.day = day
+            self.df = df
+            self.stock_dim = stock_dim
+            self.hmax = hmax
+            self.initial_amount = initial_amount
+            self.transaction_cost_pct = transaction_cost_pct
+            self.reward_scaling = reward_scaling
+            self.state_space = state_space
+            self.action_space = action_space
+            self.tech_indicator_list = tech_indicator_list
+
+            # action_space归一化和形状是self.action_space
+            self.action_space = spaces.Box(low = -1, high = 1,shape = (self.action_space,))
+            # 形状 = 6:[账户余额] + [股价] + [持有股份] + [MACD] + [RSI] + [CCI] + [ADX]
+            self.observation_space = spaces.Box(low=0, high=np.inf, shape = (self.state_space+len(self.tech_indicator_list)+1,))
+
+            # 从pandas dataframe加载数据
+            self.data = self.df.loc[self.day,:]
+            self.state = [self.initial_amount] + \
+                          [self.data.close] + \
+                          [0] + \
+                          [self.data[tech] for tech in self.tech_indicator_list]
+            self.terminal = False
+            self.turbulence_threshold = turbulence_threshold
+            # 初始化账户余额
+            self.asset_memory = [self.initial_amount]
+            self.rewards_memory = []
+            self.actions_memory=[]
+            self.date_memory=[self.data.date]
+            self._seed()
+
+        def _sell_stock(self, index, action):
+            # 根据动作的符号执行卖出操作
+            if self.state[index+2] > 0: # 如果有股票
+                # 更新账户余额
+                self.state[index+0] += \
+                self.state[index+1] * min(abs(action), self.state[index+2]) * \
+                 (1 - self.transaction_cost_pct)
+
+                self.state[index+2] -= min(abs(action), self.state[index+2])
+
+        def _buy_stock(self, index, action):
+            # 根据动作的符号执行买入操作
+            available_amount = self.state[index+0] // self.state[index+1]
+
+            # 更新账户余额
+            self.state[index+0] -= self.state[index+1] * min(available_amount, action) * \
+                              (1 + self.transaction_cost_pct)
+
+            self.state[index+2] += min(available_amount, action)
+
+        def step(self, actions):
+            self.terminal = self.day >= len(self.df.index.unique())-1
+
+            if self.terminal:
+                df = pd.DataFrame(self.asset_memory)
+                df.columns = ['account_value']
+                df['daily_return']=df.account_value.pct_change(1)
+                sharpe = (252**0.5)*df['daily_return'].mean()/ \
+                           df['daily_return'].std()
+                annual_return = ((df['daily_return'].mean()+1)**252-1)*100
+
+                print("=================================")
+                print("begin_total_asset:{}".format(self.asset_memory[0]))
+                print("end_total_asset:{}".format(self.state[0]))
+                print("total_profit:{}".format(self.state[0] - self.asset_memory[0]))
+                print("total_reward:{}".format(self.state[0] - self.asset_memory[0]))
+                print("total_cost: {}".format(self.cost))
+                print("total trades: {}".format(self.trades))
+                print("Sharpe: {}".format(sharpe))
+                print("Annual Return: {}".format(annual_return))
+                print("=================================")
+
+                return self.state, self.reward, self.terminal,{}
+            else:
+                actions = actions * self.hmax
+
+                # 执行卖出操作
+                if actions < 0:
+                    self._sell_stock(0, actions)
+
+                # 执行买入操作
+                elif actions > 0:
+                    self._buy_stock(0, actions)
+
+                # 保存动作
+                self.actions_memory.append(actions)
+                self.date_memory.append(self.data.date)
+
+                self.day += 1
+                self.data = self.df.loc[self.day,:]
+                # 加载下一个状态
+                self.state = [self.state[0]] + \
+                          [self.data.close] + \
+                          [self.state[2]] + \
+                          [self.data[tech] for tech in self.tech_indicator_list]
+
+                # 计算奖励
+                reward = self.state[0] - self.asset_memory[-1]
+                self.rewards_memory.append(reward)
+
+                # 保存账户余额
+                self.asset_memory.append(self.state[0])
+
+            return self.state, reward, self.terminal, {}
+
+        def reset(self):
+            self.asset_memory = [self.initial_amount]
+            self.day = 0
+            self.data = self.df.loc[self.day,:]
+            self.state = [self.initial_amount] + \
+                          [self.data.close] + \
+                          [0] + \
+                          [self.data[tech] for tech in self.tech_indicator_list]
+            self.terminal = False
+            self.rewards_memory = []
+            self.actions_memory=[]
+            self.date_memory=[self.data.date]
+            return self.state
+
+        def render(self, mode='human'):
+            return self.state
+
+        def _seed(self, seed=None):
+            self.np_random, seed = seeding.np_random(seed)
+            return [seed]
+
+实现DRL算法
+--------------------------
 
 
-
-步骤5：实现DRL算法
----------------------------------------
-
-The implementation of the DRL algorithms are based on `OpenAI Baselines`_ and Stable Baselines. `Stable Baselines`_ is a fork of OpenAI Baselines, with a major structural refactoring, and code cleanups.
-
-.. _OpenAI Baselines: https://github.com/openai/baselines
-.. _Stable Baselines: https://github.com/hill-a/stable-baselines
-
-.. tip::
-    FinRL library includes fine-tuned standard DRL algorithms, such as DQN, DDPG, Multi-Agent DDPG, PPO, SAC, A2C and TD3. We also allow users to design their own DRL algorithms by adapting these DRL algorithms.
-
-.. image:: ../../image/alg_compare.png
-
-FinRL uses a DRLAgent class to implement the algorithms.
+FinRL使用DRLAgent类来实现算法。
 
 .. code-block:: python
 
     class DRLAgent:
         """
-        Provides implementations for DRL algorithms
+            提供DRL算法的实现
 
-        Attributes
-        ----------
-            env: gym environment class
-                 user-defined class
-        Methods
-        -------
-            train_PPO()
-                the implementation for PPO algorithm
-            train_A2C()
-                the implementation for A2C algorithm
-            train_DDPG()
-                the implementation for DDPG algorithm
-            train_TD3()
-                the implementation for TD3 algorithm
-            DRL_prediction()
-                make a prediction in a test dataset and get results
+            属性
+            ----------
+                env: gym environment类
+                     用户定义的类
+            方法
+            -------
+                train_PPO()
+                    PPO算法的实现
+                train_A2C()
+                    A2C算法的实现
+                train_DDPG()
+                    DDPG算法的实现
+                train_TD3()
+                    TD3算法的实现
+                DRL_prediction()
+                    在测试数据集中进行预测并获取结果
         """
 
+**模型训练**:
 
+我们使用DDPG进行单股票交易,因为它在连续动作空间上表现良好。
 
-步骤6：模型训练
----------------------------------------
-
-We use 5 DRL models in this article, namely PPO, A2C, DDPG, SAC and TD3. I introduced these models in the previous article. TD3 is an improvement over DDPG.
-
-Tensorboard: reward and loss function plot
-We use tensorboard integration for hyperparameter tuning and model picking. Tensorboard generates nice looking charts.
-
-Once the learn function is called, you can monitor the RL agent during or after the training, with the following bash command:
-
+交易:假设我们在2019/01/01拥有1,000,000美元的初始资本。我们使用DDPG模型来交易AAPL股票。
 
 .. code-block:: python
    :linenos:
 
-    # cd to the tensorboard_log folder, run the following command
-    tensorboard --logdir ./A2C_20201127-19h01/
-    # you can also add past logging folder
-    tensorboard --logdir ./a2c_tensorboard/;./ppo2_tensorboard/
+    trade = data_split(df,'2019-01-01', '2020-12-01')
 
-
-Total rewards for each of the algorithm:
-
-.. image:: ../../image/single_2.png
-
-
-total_timesteps (int): the total number of samples to train on. It is one of the most important hyperparameters, there are also other important parameters such as learning rate, batch size, buffer size, etc.
-
-To compare these algorithms, I set the total_timesteps = 100k. If we set the total_timesteps too large, then we will face a risk of overfitting.
-
-By observing the episode_reward chart, we can see that these algorithms will converge to an optimal policy eventually as the step grows. TD3 converges very fast.
-
-actor_loss for DDPG and policy_loss for TD3:
-
-.. image:: ../../image/single_3.png
-
-.. image:: ../../image/single_4.png
-
-
-**Picking models**
-
-We pick the TD3 model, because it converges pretty fast and it’s a state of the art model over DDPG. By observing the episode_reward chart, TD3 doesn’t need to reach full 100k total_timesteps to converge.
-
-
-Four models: PPO A2C, DDPG, TD3
-
-**Model 1: PPO**
-
-.. code-block:: python
-    :linenos:
-
-    #tensorboard --logdir ./single_stock_tensorboard/
-    env_train = DummyVecEnv([lambda: SingleStockEnv(train)])
-    model_ppo = PPO2('MlpPolicy', env_train, tensorboard_log="./single_stock_trading_2_tensorboard/")
-    model_ppo.learn(total_timesteps=100000,tb_log_name="run_aapl_ppo")
-    #model.save('AAPL_ppo_100k')
-
-
-**Model 2: DDPG**
-
-.. code-block:: python
-    :linenos:
-
-    #tensorboard --logdir ./single_stock_tensorboard/
-    env_train = DummyVecEnv([lambda: SingleStockEnv(train)])
-    model_ddpg = DDPG('MlpPolicy', env_train, tensorboard_log="./single_stock_trading_2_tensorboard/")
-    model_ddpg.learn(total_timesteps=100000, tb_log_name="run_aapl_ddpg")
-    #model.save('AAPL_ddpg_50k')
-
-
-
-**Model 3: A2C**
-
-.. code-block:: python
-    :linenos:
-
-    #tensorboard --logdir ./single_stock_tensorboard/
-    env_train = DummyVecEnv([lambda: SingleStockEnv(train)])
-    model_a2c = A2C('MlpPolicy', env_train, tensorboard_log="./single_stock_trading_2_tensorboard/")
-    model_a2c.learn(total_timesteps=100000,tb_log_name="run_aapl_a2c")
-    #model.save('AAPL_a2c_50k')
-
-
-**Model 4: TD3**
-
-.. code-block:: python
-    :linenos:
-
-    #tensorboard --logdir ./single_stock_tensorboard/
-    #DQN<DDPG<TD3
-    env_train = DummyVecEnv([lambda: SingleStockEnv(train)])
-    model_td3 = TD3('MlpPolicy', env_train, tensorboard_log="./single_stock_trading_2_tensorboard/")
-    model_td3.learn(total_timesteps=100000,tb_log_name="run_aapl_td3")
-    #model.save('AAPL_td3_50k')
-
-
-**Testing data**
-
-.. code-block:: python
-    :linenos:
-
-    test = data_clean[(data_clean.datadate>='2019-01-01') ]
-    # the index needs to start from 0
-    test=test.reset_index(drop=True)
-
-**Trading**
-
-Assume that we have $100,000 initial capital at 2019-01-01. We use the TD3 model to trade AAPL.
-
-.. code-block:: python
-    :linenos:
-
-    model = model_td3
-    env_test = DummyVecEnv([lambda: SingleStockEnv(test)])
-    obs_test = env_test.reset()
-    print("==============Model Prediction===========")
-    for i in range(len(test.index.unique())):
-        action, _states = model.predict(obs_test)
-        obs_test, rewards, dones, info = env_test.step(action)
-        env_test.render()
-
-
-
-.. code-block:: python
-   :linenos:
-
-    # create trading env
     env_trade, obs_trade = env_setup.create_env_trading(data = trade,
-                                           env_class = StockEnvTrade,
-                                            turbulence_threshold=250)
-    ## make a prediction and get the account value change
-    df_account_value = DRLAgent.DRL_prediction(model=model_sac,
-                                               test_data = trade,
-                                               test_env = env_trade,
-                                               test_obs = obs_trade)
+                                             env_class = StockEnvSingle)
 
+    df_account_value, df_actions = DRLAgent.DRL_prediction(model=model_ddpg,
+                            test_data = trade,
+                            test_env = env_trade,
+                            test_obs = obs_trade)
 
-.. image:: ../../image/single_5.png
+回测性能
+--------------------------
 
-
-步骤7：回测我们的策略
----------------------------------------
-
-Backtesting plays a key role in evaluating the performance of a trading strategy. Automated backtesting tool is preferred because it reduces the human error.
-We usually use the `Quantopian pyfolio`_ package to backtest our trading strategies. It is easy to use and consists of various individual plots that provide a comprehensive image of the performance of a trading strategy.
-
-For simplicity purposes, in the article, we just calculate the Sharpe ratio and the annual return manually.
+FinRL使用一组函数来使用Quantopian pyfolio进行回测。
 
 .. code-block:: python
-    :linenos:
+   :linenos:
 
-    def get_DRL_sharpe():
-        df_total_value=pd.read_csv('account_value.csv',index_col=0)
-        df_total_value.columns = ['account_value']
-        df_total_value['daily_return']=df_total_value.pct_change(1)
-        sharpe = (252**0.5)*df_total_value['daily_return'].mean()/ \
-        df_total_value['daily_return'].std()
+    from pyfolio import timeseries
+    DRL_strat = backtest_strat(df_account_value)
+    perf_func = timeseries.perf_stats
+    perf_stats_all = perf_func( returns=DRL_strat,
+                                  factor_returns=DRL_strat,
+                                    positions=None, transactions=None, turnover_denom="AGB")
+    print("==============DRL Strategy Stats===========")
+    perf_stats_all
 
-        annual_return = ((df_total_value['daily_return'].mean()+1)**252-1)*100
-        print("annual return: ", annual_return)
-        print("sharpe ratio: ", sharpe)
-        return df_total_value
+    # 绘图
+    aapl, aapl_strat = baseline_strat('AAPL','2019-01-01','2020-12-01')
+    import pyfolio
+    %matplotlib inline
+    with pyfolio.plotting.plotting_context(font_scale=1.1):
+            pyfolio.create_full_tear_sheet(returns = DRL_strat,
+                                           benchmark_rets=aapl_strat, set_context=False)
+
+左表是回测性能的统计,右表是AAPL股票性能的统计。
 
 
-    def get_buy_and_hold_sharpe(test):
-        test['daily_return']=test['adjcp'].pct_change(1)
-        sharpe = (252**0.5)*test['daily_return'].mean()/ \
-        test['daily_return'].std()
-        annual_return = ((test['daily_return'].mean()+1)**252-1)*100
-        print("annual return: ", annual_return)
-
-        print("sharpe ratio: ", sharpe)
-        #return sharpe
+**绘图**:

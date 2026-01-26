@@ -1,51 +1,51 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 =============================
-Overview
+概述
 =============================
 
-Following the *de facto* standard of OpenAI Gym, we build a universe of market environments for data-driven financial reinforcement learning, namely, FinRL-Meta. We keep the following design principles.
+遵循OpenAI Gym的*事实上的*标准,我们为数据驱动的金融强化学习构建了一个市场环境宇宙,即FinRL-Meta。我们遵循以下设计原则。
 
-1. Layered structure
+1. 分层结构
 ======================================
 .. image:: ../image/finrl-meta_overview.png
     :width: 80%
     :align: center
 
-We adopt a layered structure for RL in finance, which consists of three layers: data layer, environment layer, and agent layer. Each layer executes its functions and is relatively independent. There are two main advantages:
+我们为金融中的强化学习采用分层结构,该结构由三层组成:数据层、环境层和代理层。每一层都执行其功能并且相对独立。有两个主要优势:
 
-1. Transparency: layers interact through end-to-end interfaces to implement the complete workflow of algorithm trading, achieving high extensibility.
-2. Modularity: Following the APIs between layers, users can easily customize their own functions to substitute default functions in any layer.
+1. 透明性:层通过端到端接口交互,实现算法交易的完整工作流程,实现高可扩展性。
+2. 模块化:遵循层之间的API,用户可以轻松自定义自己的函数来替换任何层中的默认函数。
 
-2. DataOps Paradigm
+2. DataOps范式
 =====================
 
 .. image:: ../image/finrl_meta_dataops.png
     :width: 80%
     :align: center
 
-DataOps paradigm is a set of practices, processes and technologies that combined: automated data engineering & agile development. It helps reduce the cycle time of data engineering and improves data quality. To deal with financial big data, we follow the DataOps paradigm and implement an automatic pipeline:
+DataOps范式是一套结合了以下内容的实践、流程和技术:自动化数据工程和敏捷开发。它有助于减少数据工程的周期时间并提高数据质量。为了处理金融大数据,我们遵循DataOps范式并实现自动流水线:
 
-1. Task planning, such as stock trading, portfolio allocation, cryptocurrency trading, etc
-2. Data processing, including data accessing and cleaning, and feature engineering.
-3. Training-testing-trading, where DRL agent takes part in.
-4. Performance monitoring, compare the performance of DRL agent with some baseline trading strategies.
+1. 任务规划,如股票交易、投资组合分配、加密货币交易等
+2. 数据处理,包括数据访问和清理,以及特征工程。
+3. 训练-测试-交易,DRL代理参与其中。
+4. 性能监控,比较DRL代理与一些基准交易策略的性能。
 
-With this pipeline, we are able to continuously produce dynamic market datasets.
+有了这个流水线,我们能够持续产生动态的市场数据集。
 
-3. Training-testing-trading pipeline:
+3. 训练-测试-交易流水线:
 =====================================
 .. image:: ../image/timeline.png
     :width: 80%
     :align: center
 
-We employ a training-testing-trading pipeline that the DRL approach follows a standard end-to-end pipeline. The DRL agent is first trained in a training dataset and fined-tuned (adjusting hyperparameters) in a testing dataset. Then, backtest the agent (on historical dataset), or deploy in a paper/live trading market.
+我们采用训练-测试-交易流水线,DRL方法遵循标准的端到端流水线。DRL代理首先在训练数据集中进行训练,然后在测试数据集中进行微调(调整超参数)。然后,在历史数据集上回测代理,或部署在模拟/实时交易市场中。
 
-This pipeline address the information leakage problem by separating the training/testing-trading periods the agent never see the data in backtesting or paper/live trading stage.
+这个流水线通过分离训练/测试-交易期间来解决信息泄漏问题,代理在回测或模拟/实时交易阶段从未见过数据。
 
-And such a unified pipeline allows fair comparison among different algorithms.
+这样的统一流水线允许在不同算法之间进行公平比较。
 
-4. Plug-and-play
+4. 即插即用
 ================
 
-In the development pipeline, we separate market environments from the data layer and the agent layer. Any DRL agent can be directly plugged into our environments, then will be trained and tested. Different agents can run on the same benchmark environment for fair comparisons. Several popular DRL libraries are supported, including ElegantRL, RLlib, and SB3.
+在开发流水线中,我们将市场环境与数据层和代理层分离。任何DRL代理都可以直接插入我们的环境,然后将被训练和测试。不同的代理可以在相同的基准环境上运行,以进行公平比较。支持几个流行的DRL库,包括ElegantRL、RLlib和SB3。

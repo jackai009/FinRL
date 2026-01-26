@@ -1,20 +1,20 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
-Environment Layer
+环境层
 =================
 
-FinRL-Meta follows the OpenAI gym-style to create market environments using the cleaned data from the data layer. It provides hundreds of environments with a common interface. Users can build their environments based on FinRL-Meta environments easily, share their results and compare the strategies’ performance. We will add more environments for convenience in the future.
+FinRL-Meta遵循OpenAI gym风格,使用来自数据层的清理数据创建市场环境。它提供了具有通用接口的数百个环境。用户可以基于FinRL-Meta环境轻松构建自己的环境,分享结果并比较策略的性能。为了方便起见,我们将在未来添加更多环境。
 
-Incorporating trading constraints to model market frictions
+纳入交易约束以模拟市场摩擦
 --------------------------------------------------------------------
 
-To better simulate real-world markets, we incorporate common market frictions (e.g., transaction costs and investor risk aversion) and portfolio restrictions (e.g., non-negative balance).
+为了更好地模拟现实世界的市场,我们纳入了常见的市场摩擦(如交易成本和投资者风险厌恶)和投资组合限制(如非负余额)。
 
-- **Flexible account settings**: Users can choose whether to allow buying on margin or short-selling.
-- **Transaction cost**: We incorporate the transaction cost to reflect market friction, e.g., 0.1% of each buy or sell trade.
-- **Risk-control for market crash**: In FinRL, a financial turbulence index is used to control risk during market crash situations. However, calculating the turbulence index is time-consuming. It may take minutes, which is not suitable for paper trading and live trading. We replace the financial turbulence index with the volatility index (VIX) that can be accessed immediately.
+- **灵活的账户设置**:用户可以选择是否允许保证金交易或卖空。
+- **交易成本**:我们纳入交易成本以反映市场摩擦,例如每次买卖交易的0.1%。
+- **市场崩盘风险控制**:在FinRL中,使用金融动荡指数来控制市场崩盘情况下的风险。然而,计算动荡指数非常耗时。可能需要几分钟,这不适合模拟交易和实时交易。我们用可以立即获取的波动率指数(VIX)替代了金融动荡指数。
 
-Multiprocessing training via vector environment
+通过向量环境进行多进程训练
 ---------------------------------------------------
 
-We utilize GPUs for multiprocessing training, namely, the vector environment technique of Isaac Gym, which significantly accelerates the training process. In each CUDA core, a trading agent interacts with a market environment to produce transitions in the form of {state, action, reward, next state}. Then, all the transitions are stored in a replay buffer to update a learner. By adopting this technique, we successfully achieve the multiprocessing simulation of hundreds of market environments to improve the performance of DRL trading agents on large datasets.
+我们利用GPU进行多进程训练,即Isaac Gym的向量环境技术,这显著加速了训练过程。在每个CUDA核心中,交易代理与市场环境交互,以产生{状态、动作、奖励、下一状态}形式的转换。然后,所有转换都存储在回放缓冲区中,以更新学习者。通过采用这种技术,我们成功实现了数百个市场环境的多进程模拟,以提高DRL交易代理在大数据集上的性能。

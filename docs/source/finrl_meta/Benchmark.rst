@@ -1,36 +1,36 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 =============================
-Benchmark
+基准测试
 =============================
 
-Performance Metrics
+性能指标
 ====================
 
-FinRL-Meta provides the following unified metrics to measure the trading performance:
+FinRL-Meta提供以下统一指标来衡量交易性能:
 
-- **Cumulative return:** :math:`R = \frac{V - V_0}{V_0}`, where V is final portfolio value, and :math:`V_0` is original capital.
-- **Annualized return:** :math:`r = (1+R)^\frac{365}{t}-1`, where t is the number of trading days.
-- **Annualized volatility:** :math:`{\sigma}_a = \sqrt{\frac{\sum_{i=1}^{n}{(r_i-\bar{r})^2}}{n-1}}`, where :math:`r_i` is the annualized return in year i, :math:`\bar{r}` is the average annualized return, and n is the number of years.
-- **Sharpe ratio:** :math:`S = \frac{r - r_f}{{\sigma}_a}`, where :math:`r_f` is the risk-free rate.
-- **Max. drawdown** The maximal percentage loss in portfolio value.
+- **累计回报:** :math:`R = \frac{V - V_0}{V_0}`,其中V是最终投资组合价值,:math:`V_0`是原始资本。
+- **年化回报:** :math:`r = (1+R)^\frac{365}{t}-1`,其中t是交易天数。
+- **年化波动率:** :math:`{\sigma}_a = \sqrt{\frac{\sum_{i=1}^{n}{(r_i-\bar{r})^2}}{n-1}}`,其中:math:`r_i`是第i年的年化回报,:math:`\bar{r}`是平均年化回报,n是年数。
+- **夏普比率:** :math:`S = \frac{r - r_f}{{\sigma}_a}`,其中:math:`r_f`是无风险利率。
+- **最大回撤** 投资组合价值的最大百分比损失。
 
-The following baseline trading strategies are provided for comparisons:
+提供了以下基准交易策略进行比较:
 
-• **Passive trading strategy**, a well-known long-term strategy. The investors just buy and hold selected stocks or indexes without further activities.
-• ****Mean-variance and min-variance strategy**, both strategies look for a balance between risks and profits. It selects a diversified portfolio to achieve higher profits at lower risk.
-• **Equally weighted strategy**, a portfolio allocation strategy that gives equal weights to different assets, avoiding allocating overly high weights on particular stocks.
+• **被动交易策略**,一种众所周知的长期策略。投资者只需买入并持有选定的股票或指数,不再进行其他活动。
+• **均值方差和最小方差策略**,两种策略都寻求风险和利润之间的平衡。它选择一个多元化的投资组合,以实现更高的利润和更低的风险。
+• **等权重策略**,一种投资组合分配策略,为不同的资产赋予相同的权重,避免在特定股票上分配过高的权重。
 
-Tutorials in Jupyter Notebooks
+Jupyter Notebook教程
 ===========================================
 
-For educational purposes, we provide Jupyter notebooks as tutorials to help newcomers get familiar with the whole pipeline. Notebooks can be found `here <https://github.com/AI4Finance-Foundation/FinRL-Tutorials>`_
+出于教育目的,我们提供Jupyter notebooks作为教程,帮助新人熟悉整个流程。Notebooks可以在`这里 <https://github.com/AI4Finance-Foundation/FinRL-Tutorials>`_找到
 
-• Stock trading: We apply popular DRL algorithms to trade multiple stocks.
-• Portfolio allocation: We use DRL agents to optimize asset allocation in a set of stocks.
-• Cryptocurrency trading: We reproduce the experiment on 10 popular cryptocurrencies.
-• Multi-agent RL for liquidation strategy analysis: We reproduce the experiment in [7]. The multi-agent optimizes the shortfalls in the liquidation task, which is to sell given shares of one stock sequentially within a given period, considering the costs arising from the market impact and the risk aversion.
-• Ensemble strategy for stock trading: We reproduce the experiment in that employed an ensemble strategy of several DRL algorithms on the stock trading task.
-• Paper trading demo: We provide a demo for paper trading. Users could combine their own strategies or trained agents in paper trading.
-• China A-share demo: We provide a demo based on the China A-share market data.
-• Hyperparameter tuning: We provide several demos for hyperparameter tuning using Optuna or Ray Tune, since hyperparameter tuning is critical for better performance.
+• 股票交易:我们应用流行的DRL算法来交易多只股票。
+• 投资组合分配:我们使用DRL代理来优化一组股票中的资产分配。
+• 加密货币交易:我们在10种流行的加密货币上重现实验。
+• 用于清算策略分析的多智能体RL:我们重现[7]中的实验。多智能体优化清算任务中的缺口,即在考虑市场影响和风险厌恶产生的成本的情况下,在给定时期内顺序卖出一只股票的给定份额。
+• 股票交易的集成策略:我们在股票交易任务上重现采用了几种DRL算法的集成策略的实验。
+• 模拟交易演示:我们提供模拟交易的演示。用户可以在模拟交易中结合自己的策略或训练好的代理。
+• 中国A股演示:我们提供基于中国A股市场数据的演示。
+• 超参数调优:我们提供使用Optuna或Ray Tune进行超参数调优的几个演示,因为超参数调优对于更好的性能至关重要。

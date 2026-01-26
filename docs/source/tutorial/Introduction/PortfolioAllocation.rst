@@ -8,7 +8,7 @@
 
 .. _FinRL\: A Deep Reinforcement Learning Library for Automated Stock Trading in Quantitative Finance: https://arxiv.org/abs/2011.09607
 
-在NeurIPS 2020：深度强化学习研讨会上展示。
+在NeurIPS 2020:深度强化学习研讨会上展示。
 
 Jupyter笔记本代码可在我们的Github_和`Google Colab`_上找到。
 
@@ -21,77 +21,73 @@ Jupyter笔记本代码可在我们的Github_和`Google Colab`_上找到。
 
     - FinRL `Multiple Stocks Trading <https://colab.research.google.com/github/AI4Finance-LLC/FinRL-Library/blob/master/FinRL_multiple_stock_trading.ipynb>`_ at Google Colab:
 
-Check our previous tutorials: `Single Stock Trading <https://finrl.readthedocs.io/en/latest/tutorial/SingleStockTrading.html>`_ and `Multiple Stock Trading <https://finrl.readthedocs.io/en/latest/tutorial/MultipleStockTrading.html>`_ for detailed explanation of the FinRL architecture and modules.
+查看我们之前的教程:`Single Stock Trading <https://finrl.readthedocs.io/en/latest/tutorial/SingleStockTrading.html>`_和`Multiple Stock Trading <https://finrl.readthedocs.io/en/latest/tutorial/MultipleStockTrading.html>`_以获取FinRL架构和模块的详细解释。
 
 
 
-Overview
+概述
 -------------
 
-To begin with, we would like to explain the logic of portfolio allocation using Deep Reinforcement Learning.We use Dow 30 constituents as an example throughout this article, because those are the most popular stocks.
+首先,我们想解释使用深度强化学习进行投资组合分配的逻辑。我们以道琼斯30只成分股为例,因为它们是最受欢迎的股票。
 
-Let’s say that we got a million dollars at the beginning of 2019. We want to invest this $1,000,000 into stock markets, in this case is Dow Jones 30 constituents.Assume that no margin, no short sale, no treasury bill (use all the money to trade only these 30 stocks). So that the weight of each individual stock is non-negative, and the weights of all the stocks add up to one.
+假设我们在2019年初获得了100万美元。我们想将这1,000,000美元投资于股票市场,在这种情况下是道琼斯30只成分股。假设没有保证金交易,没有卖空,没有国库券(使用所有资金仅交易这30只股票)。因此,每只股票的权重是非负的,所有股票的权重加起来等于一。
 
-We hire a smart portfolio manager- Mr. Deep Reinforcement Learning. Mr. DRL will give us daily advice includes the portfolio weights or the proportions of money to invest in these 30 stocks. So every day we just need to rebalance the portfolio weights of the stocks.The basic logic is as follows.
+我们聘请了一位聪明的投资组合经理——深度强化学习先生。DRL先生每天都会给我们建议,包括投资组合权重或投资于这30只股票的资金比例。所以我们每天只需要重新平衡股票的投资组合权重。基本逻辑如下。
+.. image:: ../../image/portfolio_allocation_1.png
 
-.. image:: ../image/portfolio_allocation_1.png
+投资组合分配与多股票交易不同,因为我们在每个时间步骤本质上重新平衡权重,我们必须使用所有可用资金。
 
-Portfolio allocation is different from multiple stock trading because we are essentially rebalancing the weights at each time step, and we have to use all available money.
-
-The traditional and the most popular way of doing portfolio allocation is mean-variance or modern portfolio theory (MPT):
+进行投资组合分配的传统和最流行的方式是均值方差或现代投资组合理论(MPT):
 
 .. image:: ../../image/portfolio_allocation_2.png
 
 
-However, MPT performs not so well in out-of-sample data. MPT is calculated only based on stock returns, if we want to take other relevant factors into account, for example some of the technical indicators like MACD or RSI, MPT may not be able to combine these information together well.
+然而,MPT在样本外数据上的表现不是很好。MPT仅基于股票回报计算,如果我们想考虑其他相关因素,例如一些技术指标如MACD或RSI,MPT可能无法很好地结合这些信息。
 
-We introduce a DRL library FinRL that facilitates beginners to expose themselves to quantitative finance. FinRL is a DRL library designed specifically for automated stock trading with an effort for educational and demonstrative purpose.
+我们介绍一个DRL库FinRL,它促进初学者接触量化金融。FinRL是一个专门为自动化股票交易设计的DRL库,致力于教育和演示目的。
 
-This article is focusing on one of the use cases in our paper: Portfolio Allocation. We use one Jupyter notebook to include all the necessary steps.
-
-
+本文重点关注我们论文中的用例之一:投资组合分配。我们使用一个Jupyter notebook来包含所有必要的步骤。
 
 
-Problem Definition
+
+问题定义
 --------------------------
 
-This problem is to design an automated trading solution for portfolio allocation. We model the stock trading process as a Markov Decision Process (MDP). We then formulate our trading goal as a maximization problem.
+这个问题是设计用于投资组合分配的自动化交易解决方案。我们将股票交易过程建模为马尔可夫决策过程(MDP)。然后我们将我们的交易目标制定为最大化问题。
 
-The components of the reinforcement learning environment are:
+强化学习环境的组件包括:
 
-    - **Action**: portfolio weight of each stock is within [0,1]. We use softmax function to normalize the actions to sum to 1.
+    - **Action**:每只股票的投资组合权重在[0,1]范围内。我们使用softmax函数将动作归一化为总和为1。
 
-    - **State: {Covariance Matrix, MACD, RSI, CCI, ADX}, **state space** shape is (34, 30). 34 is the number of rows, 30 is the number of columns.
+    - **State: {Covariance Matrix, MACD, RSI, CCI, ADX}, **state space** 形状是(34, 30)。34是行数,30是列数。
 
-    - **Reward function**: r(s, a, s′) = p_t, p_t is the cumulative portfolio value.
+    - **Reward function**: r(s, a, s′) = p_t, p_t是累计投资组合价值。
 
-    - **Environment**: portfolio allocation for Dow 30 constituents.
+    - **Environment**:道琼斯30只成分股的投资组合分配。
 
+协方差矩阵是一个很好的特征,因为投资组合经理使用它来量化与特定投资组合相关的风险(标准差)。
 
-Covariance matrix is a good feature because portfolio managers use it to quantify the risk (standard deviation) associated with a particular portfolio.
-
-We also assume no transaction cost, because we are trying to make a simple portfolio allocation case as a starting point.
+我们还假设没有交易成本,因为我们试图使一个简单的投资组合分配案例作为起点。
 
 
 
 Load Python Packages
 --------------------------
 
-Install the unstable development version of FinRL:
+安装FinRL的不稳定开发版本:
 
 .. code-block:: python
    :linenos:
 
-    # Install the unstable development version in Jupyter notebook:
+    # 在Jupyter notebook中安装不稳定开发版本:
     !pip install git+https://github.com/AI4Finance-LLC/FinRL-Library.git
 
-
-Import Packages:
+导入包:
 
 .. code-block:: python
    :linenos:
 
-    # import packages
+    # 导入包
     import pandas as pd
     import numpy as np
     import matplotlib
@@ -123,88 +119,87 @@ Import Packages:
 
 
 
-Download Data
+下载数据
 --------------------------
 
-FinRL uses a YahooDownloader class to extract data.
+FinRL使用YahooDownloader类来提取数据。
 
 .. code-block:: python
 
     class YahooDownloader:
         """
-        Provides methods for retrieving daily stock data from Yahoo Finance API
+            提供从Yahoo Finance API检索每日股票数据的方法
 
-        Attributes
-        ----------
-            start_date : str
-                start date of the data (modified from config.py)
-            end_date : str
-                end date of the data (modified from config.py)
-            ticker_list : list
-                a list of stock tickers (modified from config.py)
+            属性
+            ----------
+                start_date : str
+                    数据的开始日期(从config.py修改)
+                end_date : str
+                    数据的结束日期(从config.py修改)
+                ticker_list : list
+                    股票代码列表(从config.py修改)
 
-        Methods
-        -------
-            fetch_data()
-                Fetches data from yahoo API
+            方法
+            -------
+                fetch_data()
+                    从yahoo API获取数据
         """
 
-Download and save the data in a pandas DataFrame:
+下载并将数据保存在pandas DataFrame中:
 
 .. code-block:: python
    :linenos:
 
-    # Download and save the data in a pandas DataFrame:
+    # 下载并将数据保存在pandas DataFrame中:
     df = YahooDownloader(start_date = '2008-01-01',
                          end_date = '2020-12-01',
                          ticker_list = config_tickers.DOW_30_TICKER).fetch_data()
 
 
-Preprocess Data
+预处理数据
 --------------------------
 
-FinRL uses a FeatureEngineer class to preprocess data.
+FinRL使用FeatureEngineer类来预处理数据。
 
 .. code-block:: python
 
     class FeatureEngineer:
         """
-        Provides methods for preprocessing the stock price data
+            提供预处理股票价格数据的方法
 
-        Attributes
-        ----------
-            df: DataFrame
-                data downloaded from Yahoo API
-            feature_number : int
-                number of features we used
-            use_technical_indicator : boolean
-                we technical indicator or not
-            use_turbulence : boolean
-                use turbulence index or not
+            属性
+            ----------
+                df: DataFrame
+                    从Yahoo API下载的数据
+                feature_number : int
+                    我们使用的特征数量
+                use_technical_indicator : boolean
+                    使用技术指标或不使用
+                use_turbulence : boolean
+                    使用动荡指数或不使用
 
-        Methods
-        -------
-            preprocess_data()
-                main method to do the feature engineering
+            方法
+            -------
+                preprocess_data()
+                    进行特征工程的主要方法
         """
 
-Perform Feature Engineering: covariance matrix + technical indicators:
+执行特征工程:协方差矩阵 + 技术指标:
 
 .. code-block:: python
    :linenos:
 
-    # Perform Feature Engineering:
+    # 执行特征工程:
     df = FeatureEngineer(df.copy(),
                         use_technical_indicator=True,
                         use_turbulence=False).preprocess_data()
 
-
-    # add covariance matrix as states
+    # 添加协方差矩阵作为状态
     df=df.sort_values(['date','tic'],ignore_index=True)
     df.index = df.date.factorize()[0]
 
     cov_list = []
-    # look back is one year
+    # 回顾一年
     lookback=252
     for i in range(lookback,len(df.index.unique())):
       data_lookback = df.loc[i-lookback:i,:]
@@ -220,47 +215,46 @@ Perform Feature Engineering: covariance matrix + technical indicators:
 
 .. image:: ../../image/portfolio_allocation_3.png
 
-Build Environment
+构建环境
 --------------------------
 
-FinRL uses a EnvSetup class to setup environment.
+FinRL使用EnvSetup类来设置环境。
 
 
 .. code-block:: python
 
     class EnvSetup:
         """
-        Provides methods for retrieving daily stock data from
-        Yahoo Finance API
+            提供从Yahoo Finance API检索每日股票数据的方法
 
-        Attributes
+            属性
             ----------
-            stock_dim: int
-                number of unique stocks
-            hmax : int
-                maximum number of shares to trade
-            initial_amount: int
-                start money
-            transaction_cost_pct : float
-                transaction cost percentage per trade
-            reward_scaling: float
-                scaling factor for reward, good for training
-            tech_indicator_list: list
-                a list of technical indicator names (modified from config.py)
-        Methods
+                stock_dim: int
+                    唯一股票数量
+                hmax : int
+                    交易的最大股份数
+                initial_amount: int
+                    初始资金
+                transaction_cost_pct : float
+                    每笔交易的交易费用百分比
+                reward_scaling: float
+                    奖励缩放因子,有利于训练
+                tech_indicator_list: list
+                    技术指标名称列表(从config.py修改)
+        方法
             -------
-            create_env_training()
-                create env class for training
-            create_env_validation()
-                create env class for validation
-            create_env_trading()
-                create env class for trading
+                create_env_training()
+                    创建用于训练的env类
+                create_env_validation()
+                    创建用于验证的env类
+                create_env_trading()
+                    创建用于交易的env类
         """
 
 
-Initialize an environment class:
+初始化一个环境类:
 
-User-defined Environment: a simulation environment class.The environment for portfolio allocation:
+用户定义的环境:模拟环境类。用于投资组合分配的环境:
 
 .. code-block:: python
    :linenos:
@@ -275,48 +269,48 @@ User-defined Environment: a simulation environment class.The environment for por
     import matplotlib.pyplot as plt
 
     class StockPortfolioEnv(gym.Env):
-        """A single stock trading environment for OpenAI gym
-        Attributes
+        """用于OpenAI gym的单股票交易环境
+        属性
         ----------
             df: DataFrame
-                input data
+                    输入数据
             stock_dim : int
-                number of unique stocks
+                    唯一股票数量
             hmax : int
-                maximum number of shares to trade
+                    交易的最大股份数
             initial_amount : int
-                start money
+                    初始资金
             transaction_cost_pct: float
-                transaction cost percentage per trade
+                    每笔交易的交易费用百分比
             reward_scaling: float
-                scaling factor for reward, good for training
+                    奖励缩放因子,有利于训练
             state_space: int
-                the dimension of input features
+                    输入特征的维度
             action_space: int
-                equals stock dimension
+                    等于股票维度
             tech_indicator_list: list
-                a list of technical indicator names
+                    技术指标名称列表
             turbulence_threshold: int
-                a threshold to control risk aversion
+                    控制风险厌恶的阈值
             day: int
-                an increment number to control date
-        Methods
+                    控制日期的递增数字
+        方法
         -------
-        _sell_stock()
-            perform sell action based on the sign of the action
-        _buy_stock()
-            perform buy action based on the sign of the action
-        step()
-            at each step the agent will return actions, then
-            we will calculate the reward, and return the next observation.
-        reset()
-            reset the environment
-        render()
-            use render to return other functions
-        save_asset_memory()
-            return account value at each time step
-        save_action_memory()
-            return actions/positions at each time step
+            _sell_stock()
+                根据动作的符号执行卖出操作
+            _buy_stock()
+                根据动作的符号执行买入操作
+            step()
+                在每个步骤,代理将返回动作,然后
+                我们将计算奖励,并返回下一个观察。
+            reset()
+                重置环境
+            render()
+                使用render返回其他函数
+            save_asset_memory()
+                返回每个时间步的账户价值
+            save_action_memory()
+                返回每个时间步的动作/位置
 
         """
         metadata = {'render.modes': ['human']}
@@ -348,32 +342,31 @@ User-defined Environment: a simulation environment class.The environment for por
             self.action_space = action_space
             self.tech_indicator_list = tech_indicator_list
 
-            # action_space normalization and shape is self.stock_dim
+            # action_space归一化和形状是self.stock_dim
             self.action_space = spaces.Box(low = 0, high = 1,shape = (self.action_space,))
-            # Shape = (34, 30)
-            # covariance matrix + technical indicators
+            # 形状 = (34, 30)
+            # 协方差矩阵 + 技术指标
             self.observation_space = spaces.Box(low=0,
                                                 high=np.inf,
                                                 shape = (self.state_space+len(self.tech_indicator_list),
                                                          self.state_space))
 
-            # load data from a pandas dataframe
+            # 从pandas dataframe加载数据
             self.data = self.df.loc[self.day,:]
             self.covs = self.data['cov_list'].values[0]
             self.state =  np.append(np.array(self.covs),
                           [self.data[tech].values.tolist() for tech in self.tech_indicator_list ], axis=0)
             self.terminal = False
             self.turbulence_threshold = turbulence_threshold
-            # initalize state: inital portfolio return + individual stock return + individual weights
+            # 初始化状态:初始投资组合回报 + 个股回报 + 个股权重
             self.portfolio_value = self.initial_amount
 
-            # memorize portfolio value each step
+            # 记住每个步骤的投资组合价值
             self.asset_memory = [self.initial_amount]
-            # memorize portfolio return each step
+            # 记住每个步骤的投资组合回报
             self.portfolio_return_memory = [0]
             self.actions_memory=[[1/self.stock_dim]*self.stock_dim]
             self.date_memory=[self.data.date.unique()[0]]
-
 
         def step(self, actions):
             # print(self.day)
@@ -404,35 +397,34 @@ User-defined Environment: a simulation environment class.The environment for por
                 print("=================================")
 
                 return self.state, self.reward, self.terminal,{}
-
             else:
                 #print(actions)
-                # actions are the portfolio weight
-                # normalize to sum of 1
+                # actions是投资组合权重
+                # 归一化为总和为1
                 norm_actions = (np.array(actions) - np.array(actions).min()) / (np.array(actions) - np.array(actions).min()).sum()
                 weights = norm_actions
                 #print(weights)
                 self.actions_memory.append(weights)
                 last_day_memory = self.data
 
-                #load next state
+                #加载下一个状态
                 self.day += 1
                 self.data = self.df.loc[self.day,:]
                 self.covs = self.data['cov_list'].values[0]
                 self.state =  np.append(np.array(self.covs), [self.data[tech].values.tolist() for tech in self.tech_indicator_list ], axis=0)
-                # calcualte portfolio return
-                # individual stocks' return * weight
+                # 计算投资组合回报
+                # 个股回报 * 权重
                 portfolio_return = sum(((self.data.close.values / last_day_memory.close.values)-1)*weights)
-                # update portfolio value
+                # 更新投资组合价值
                 new_portfolio_value = self.portfolio_value*(1+portfolio_return)
                 self.portfolio_value = new_portfolio_value
 
-                # save into memory
+                # 保存到内存
                 self.portfolio_return_memory.append(portfolio_return)
                 self.date_memory.append(self.data.date.unique()[0])
                 self.asset_memory.append(new_portfolio_value)
 
-                # the reward is the new portfolio value or end portfolo value
+                # 奖励是新投资组合价值或最终投资组合价值
                 self.reward = new_portfolio_value
                 #self.reward = self.reward*self.reward_scaling
 
@@ -443,7 +435,7 @@ User-defined Environment: a simulation environment class.The environment for por
             self.asset_memory = [self.initial_amount]
             self.day = 0
             self.data = self.df.loc[self.day,:]
-            # load states
+            # 加载状态
             self.covs = self.data['cov_list'].values[0]
             self.state =  np.append(np.array(self.covs), [self.data[tech].values.tolist() for tech in self.tech_indicator_list ], axis=0)
             self.portfolio_value = self.initial_amount
@@ -467,7 +459,7 @@ User-defined Environment: a simulation environment class.The environment for por
             return df_account_value
 
         def save_action_memory(self):
-            # date and close price length must match actions length
+            # 日期和收盘价长度必须与动作长度匹配
             date_list = self.date_memory
             df_date = pd.DataFrame(date_list)
             df_date.columns = ['date']
@@ -483,43 +475,41 @@ User-defined Environment: a simulation environment class.The environment for por
             self.np_random, seed = seeding.np_random(seed)
             return [seed]
 
-
-Implement DRL Algorithms
+实现DRL算法
 --------------------------
 
 
-FinRL uses a DRLAgent class to implement the algorithms.
+FinRL使用DRLAgent类来实现算法。
 
 .. code-block:: python
 
     class DRLAgent:
         """
-        Provides implementations for DRL algorithms
+            提供DRL算法的实现
 
-        Attributes
-        ----------
-            env: gym environment class
-                 user-defined class
-        Methods
-        -------
-            train_PPO()
-                the implementation for PPO algorithm
-            train_A2C()
-                the implementation for A2C algorithm
-            train_DDPG()
-                the implementation for DDPG algorithm
-            train_TD3()
-                the implementation for TD3 algorithm
-            DRL_prediction()
-                make a prediction in a test dataset and get results
+            属性
+            ----------
+                env: gym environment类
+                     用户定义的类
+            方法
+            -------
+                train_PPO()
+                    PPO算法的实现
+                train_A2C()
+                    A2C算法的实现
+                train_DDPG()
+                    DDPG算法的实现
+                train_TD3()
+                    TD3算法的实现
+                DRL_prediction()
+                    在测试数据集中进行预测并获取结果
         """
 
-**Model Training**:
+**模型训练**:
 
-We use A2C for portfolio allocation, because it is stable, cost-effective, faster and works better with large batch sizes.
+我们使用A2C进行投资组合分配,因为它是稳定的、成本效益的、更快的,并且在更大的批量大小下工作得更好。
 
-Trading:Assume that we have $1,000,000 initial capital at 2019/01/01. We use the A2C model to perform portfolio allocation of the Dow 30 stocks.
-
+交易:假设我们在2019/01/01拥有1,000,000美元的初始资本。我们使用A2C模型来对道琼斯30只股票执行投资组合分配。
 
 .. code-block:: python
    :linenos:
@@ -534,19 +524,16 @@ Trading:Assume that we have $1,000,000 initial capital at 2019/01/01. We use the
                             test_env = env_trade,
                             test_obs = obs_trade)
 
-
 .. image:: ../../image/portfolio_allocation_4.png
 
-
-The output actions or the portfolio weights look like this:
+输出动作或投资组合权重看起来像这样:
 
 .. image:: ../../image/portfolio_allocation_5.png
 
-
-Backtesting Performance
+回测性能
 --------------------------
 
-FinRL uses a set of functions to do the backtesting with Quantopian pyfolio.
+FinRL使用一组函数来使用Quantopian pyfolio进行回测。
 
 .. code-block:: python
    :linenos:
@@ -565,7 +552,7 @@ FinRL uses a set of functions to do the backtesting with Quantopian pyfolio.
                                       baseline_end = '2020-12-01')
 
 
-    # plot
+    # 绘图
     dji, dow_strat = baseline_strat('^DJI','2019-01-01','2020-12-01')
     import pyfolio
     %matplotlib inline
@@ -573,8 +560,7 @@ FinRL uses a set of functions to do the backtesting with Quantopian pyfolio.
             pyfolio.create_full_tear_sheet(returns = DRL_strat,
                                            benchmark_rets=dow_strat, set_context=False)
 
-The left table is the stats for backtesting performance, the right table is the stats for Index (DJIA) performance.
+左表是回测性能的统计,右表是指数(DJIA)性能的统计。
 
 
-
-**Plots**:
+**绘图**:

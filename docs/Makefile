@@ -1,19 +1,15 @@
-# Minimal makefile for Sphinx documentation
-# Run using make html.
-
-# You can set these variables from the command line.
+# Sphinx文档的最小Makefile
+# 使用make html运行。
+# 您可以从命令行设置这些变量。
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
-
-# Put it first so that "make" without argument is like "make help".
+# 首先放置它，这样不带参数的"make"就像"make help"一样。
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
 .PHONY: help Makefile
-
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+# 捕获所有目标：使用新的"make mode"选项将所有未知目标路由到Sphinx。
+# $(O)意作为$(SPHINXOPTS)的快捷方式。
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

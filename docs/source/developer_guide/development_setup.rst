@@ -1,40 +1,40 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
 ============================
-Development Guide
+开发指南
 ============================
 
-Git is a commonly used tool in software engineering. PyCharm is a popular IDE for Python, and developers can also choose other IDEs as they like. Now, we take PyCharm as an example. This setup with PyCharm makes it easy to work on all of AI4Finance-Foundation's repositories simultaneously, while allowing easy debugging, committing to the respective repo and creating PRs/MRs.
+Git是软件工程中常用的工具。PyCharm是流行的Python IDE,开发者也可以选择其他自己喜欢的IDE。现在,我们以PyCharm为例。使用PyCharm进行这种设置可以轻松地在AI4Finance-Foundation的所有存储库上同时工作,同时便于调试、提交到相应的存储库以及创建PR/MR。
 
-Step 1: Download Software
+步骤1:下载软件
 =======
 
--Download and install `Anaconda <https://www.anaconda.com/>`_.
+-下载并安装`Anaconda <https://www.anaconda.com/>`_。
 
--Download and install `PyCharm <https://www.jetbrains.com/pycharm/>`_.  The Community Edition (free version) offers everything you need except running Jupyter notebooks. The Full-fledged Professional Edition offers everything. A workaround to run existing notebooks in the Community edition is to copy all notebook cells into .py files.
-For notebook support, you can consider PyCharm Professional Edition.
+-下载并安装`PyCharm <https://www.jetbrains.com/pycharm/>`_。社区版(免费版本)提供了运行Jupyter notebooks之外所需的一切。功能齐全的专业版提供了所有功能。在社区版中运行现有notebooks的解决方法是将所有notebook单元格复制到.py文件中。
+对于notebook支持,可以考虑PyCharm专业版。
 
--On GitHub, fork `FinRL <https://github.com/AI4Finance-Foundation/FinRL>`_ to your private Github repo.
+-在GitHub上,将`FinRL <https://github.com/AI4Finance-Foundation/FinRL>`_fork到你的私有GitHub仓库。
 
--On GitHub, fork `ElegantRL <https://github.com/AI4Finance-Foundation/ElegantRL>`_ to your private Github repo.
+-在GitHub上,将`ElegantRL <https://github.com/AI4Finance-Foundation/ElegantRL>`_fork到你的私有GitHub仓库。
 
--On GitHub, fork `FinRL-Meta <https://github.com/AI4Finance-Foundation/FinRL-Meta>`_ to your private Github repo.
+-在GitHub上,将`FinRL-Meta <https://github.com/AI4Finance-Foundation/FinRL-Meta>`_fork到你的私有GitHub仓库。
 
--All next steps happen on your local computer.
+-接下来的所有步骤都在你的本地计算机上进行。
 
-Step 2: Git Clone
+步骤2:Git Clone
 =======
 
 .. code-block:: bash
 
     mkdir ~/ai4finance
     cd ~/ai4finance
-    git clone https://github.com/[your_github_username]/FinRL.git
-    git clone https://github.com/[your_github_username]/ElegantRL.git
-    git clone https://github.com/[your_github_username]/FinRL-Meta.git
+    git clone https://github.com/[你的_github用户名]/FinRL.git
+    git clone https://github.com/[你的_github用户名]/ElegantRL.git
+    git clone https://github.com/[你的_github用户名]/FinRL-Meta.git
 
 
-Step 3: Create a Conda Environment
+步骤3:创建Conda环境
 ======
 
 .. code-block:: bash
@@ -46,31 +46,31 @@ Step 3: Create a Conda Environment
     cd FinRL
     pip install -r requirements.txt
 
-Install ElegantRL using requirements.txt, or open ElegantRL/setup.py in a text editor and pip install anything you can find: gym, matplotlib, numpy, pybullet, torch, opencv-python, and box2d-py.
+使用requirements.txt安装ElegantRL,或者用文本编辑器打开ElegantRL/setup.py,并pip install你能找到的任何东西:gym、matplotlib、numpy、pybullet、torch、opencv-python和box2d-py。
 
 
-Step 4: Configure a PyCharm Project
+步骤4:配置PyCharm项目
 ======
 
--Launch PyCharm
+-启动PyCharm
 
--File > Open > [ai4finance project folder]
+-文件 > 打开 > [ai4finance项目文件夹]
 
 .. image:: ../image/pycharm_status_bar.png
 
--At the bottom right of the status bar, change or add the interpreter to the ai4finance conda environment. Make sure when you click the "terminal" bar at the bottom left, it shows ai4finance.
+-在状态栏的右下角,更改或添加解释器到ai4finance conda环境。确保当你点击左下角的"终端"栏时,它显示ai4finance。
 
 .. image:: ../image/pycharm_MarkDirectoryAsSourcesRoot.png
 
--At the left of the screen, in the project file tree:
+-在屏幕左侧的项目文件树中:
 
-    - Right-click on the FinRL folder > Mark Directory as > Sources Root
-    - Right-click on the ElegantRL folder > Mark Directory as > Sources Root
-    - Right-click on the FinRL-Meta folder > Mark Directory as > Sources Root
+    -右键单击FinRL文件夹 > 将目录标记为 > 源根目录
+    -右键单击ElegantRL文件夹 > 将目录标记为 > 源根目录
+    -右键单击FinRL-Meta文件夹 > 将目录标记为 > 源根目录
 
--Once you run a .py file, you will notice that you may still have some missing packages.  In that case, simply pip install them.
+-一旦你运行.py文件,你会注意到你可能仍然缺少一些包。在这种情况下,只需pip install它们即可。
 
-For example, we revise FinRL.
+例如,我们修改FinRL。
 
 .. code-block:: bash
 
@@ -78,34 +78,34 @@ For example, we revise FinRL.
     cd ./FinRL
     git checkout -b branch_xxx
 
-where branch_xxx is a new branch name. In this branch, we revise config.py.
+其中branch_xxx是一个新的分支名称。在这个分支中,我们修改config.py。
 
-Step 5: New a Branch
+步骤5:创建新分支
 =======
 
-Please new a new branch based on branch "staging" (NOT "master"), which is for all developers. DO NOT directly push codes to the branch "staging" or "master".
+请基于分支"staging"(NOT "master")创建一个新分支,这是给所有开发者的。不要直接推送代码到分支"staging"或"master"。
 
 
-Step 6: Creating Commits and PRs/MRs
+步骤6:创建提交和PR/MR
 =======
 
--Create commits as you usually do through PyCharm.
+-像往常一样通过PyCharm创建提交。
 
--Make sure that each commit covers only 1 of the 3 repo's. Don't create a commit that spans more than one repo, e.g., FinRL and ElegantRL.
+-确保每个提交只覆盖3个存储库中的1个。不要创建跨越多个存储库的提交,例如FinRL和ElegantRL。
 
 .. image:: ../image/pycharm_push_PR.png
 
--When you do a Git Push, PyCharm will ask you to which of the 3 repos you want to push. Just like the above figure, we select the repo "FinRL".
+-当你执行Git Push时,PyCharm会询问你要推送到3个存储库中的哪一个。就像上图一样,我们选择存储库"FinRL"。
 
 
-With respect to creating a pull request (PR) or merge quest (MR), please refer to `Create a PR <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request>`_ or `Opensource Create a PR <https://opensource.com/article/19/7/create-pull-request-github>`_.
+关于创建pull request(PR)或merge request(MR),请参考`创建PR <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request>`_或`开源创建PR <https://opensource.com/article/19/7/create-pull-request-github>`_。
 
-Step 7: Submit PRs/MRs
+步骤7:提交PR/MR
 =======
 
-When submiting PRs/MRs, please choose the branch "staging", NOT "master".
+当提交PR/MR时,请选择分支"staging",NOT "master"。
 
-Step 8: Merge "staging" to "master"
+步骤8:合并"staging"到"master"
 =======
 
-This step is for managers. If the branch "staging" is stable and works successfully after a series of tests, the managers of this repo will merge it to the branch "master" every 2-4 weeks. To avoid any risk, we hope managers download the "master" branch locally before merging.
+此步骤适用于管理员。如果分支"staging"稳定并在一系列测试后成功运行,该仓库的管理员将每隔2-4周将其合并到分支"master"。为避免任何风险,我们希望管理员在合并前在本地下载"master"分支。

@@ -2,7 +2,7 @@
 
 pushd %~dp0
 
-REM Command file for Sphinx documentation. Run using .\make.bat html.
+REM Sphinx文档的命令文件。使用.\make.bat html运行。
 
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
@@ -15,13 +15,13 @@ if "%1" == "" goto help
 %SPHINXBUILD% >NUL 2>NUL
 if errorlevel 9009 (
 	echo.
-	echo.The 'sphinx-build' command was not found. Make sure you have Sphinx
-	echo.installed, then set the SPHINXBUILD environment variable to point
-	echo.to the full path of the 'sphinx-build' executable. Alternatively you
-	echo.may add the Sphinx directory to PATH.
+	echo.'sphinx-build'命令未找到。请确保已安装Sphinx
+	echo.，然后设置SPHINXBUILD环境变量指向
+	echo.'sphinx-build'可执行文件的完整路径。或者您
+	echo.可以将Sphinx目录添加到PATH。
 	echo.
-	echo.If you don't have Sphinx installed, grab it from
-	echo.http://sphinx-doc.org/
+	echo.如果您没有安装Sphinx，请从
+	echo.http://sphinx-doc.org/获取
 	exit /b 1
 )
 

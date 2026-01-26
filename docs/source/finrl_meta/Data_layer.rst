@@ -1,42 +1,42 @@
 :github_url: https://github.com/AI4Finance-Foundation/FinRL
 
-Data Layer
+数据层
 ==========
 
-In the data layer, we use a unified data processor to access data, clean data, and extract features.
+在数据层中,我们使用统一的数据处理器来访问数据、清理数据和提取特征。
 
 .. image:: ../image/finrl-meta_data_layer.png
     :width: 60%
     :align: center
 
 
-Data Accessing
+数据访问
 --------------
 
-We connect data APIs of different platforms and unify them using a FinRL-Meta data processor. Users can access data from various sources given the start date, end date, stock list, time interval, and kwargs.
+我们连接不同平台的数据API,并使用FinRL-Meta数据处理器统一它们。用户可以根据开始日期、结束日期、股票列表、时间间隔和kwargs从各种来源访问数据。
 
 .. image:: ../image/FinRL-Meta-Data-layer.png
     :width: 80%
     :align: center
 
-Data Cleaning
+数据清理
 --------------
 
-Raw data retrieved from different data sources are usually of various formats and have erroneous or NaN data (missing data) to different extents, making data cleaning highly time-consuming. In FinRL-Meta, we automate the data cleaning process.
+从不同数据源检索的原始数据通常格式各异,并且在不同程度上有错误或NaN数据(缺失数据),使得数据清理非常耗时。在FinRL-Meta中,我们自动化了数据清理过程。
 
-The cleaning processes of NaN data are usually different for various time frequencies. For Low-frequency data, except few stocks with extremely low liquidity, the few NaN values usually mean suspension during that time interval. While for high-frequency data, NaN values are pervasive, which usually means no transaction during that time interval. To reduce the simulation-to-reality gap considering of data efficiency, we provide different solutions for these two cases.
+对于不同的时间频率,NaN数据的清理过程通常不同。对于低频数据,除了流动性极低的少数股票外,少数NaN值通常意味着在该时间间隔内暂停。而对于高频数据,NaN值无处不在,这通常意味着在该时间间隔内没有交易。为了考虑数据效率的模拟与现实差距,我们为这两种情况提供了不同的解决方案。
 
-In the low-frequency case, we directly delete the rows with NaN values, reflecting suspension in simulated trading environments. However, it is not suitable to directly delete rows with NaN values in high-frequency cases.
+在低频情况下,我们直接删除带有NaN值的行,反映模拟交易环境中的暂停。然而,直接删除带有NaN值的行并不适合高频情况。
 
-In our test of downloading 1-min OHLCV data of DJIA 30 companies from Alpaca during 2021–01–01~2021–05–31, there were 39736 rows for the raw data. However, after dropping rows with NaN values, only 3361 rows are left.
+在我们从Alpaca下载2021-01-01~2021-05-31期间道琼斯工业平均指数(DJIA)30家公司1分钟OHLCV数据的测试中,原始数据有39736行。然而,在删除带有NaN值的行后,只剩下3361行。
 
-The low data efficiency of the dropping method is unacceptable. Instead, we take an improved forward filling method. We fill the open, high, low, close columns with the last valid value of close price and the volume column with 0, which is a standard method in practice.
+删除方法的数据效率低得无法接受。相反,我们采用了一种改进的前向填充方法。我们用收盘价的最后一个有效值填充开盘价、最高价、最低价、收盘价列,用0填充成交量列,这是实践中的一种标准方法。
 
-Although this filling method sacrifices the authenticity of the simulated environments, it is acceptable compared to significantly improved data efficiency, especially under tickers with high liquidity. Moreover, this filling method can be further improved using bid, ask prices to reduce the simulation-to-reality gap.
+虽然这种填充方法牺牲了模拟环境的真实性,但与显著提高的数据效率相比,这是可以接受的,特别是在高流动性股票的情况下。此外,这种填充方法可以使用买卖价进一步改进,以减少模拟与现实差距。
 
-Feature Engineering
+特征工程
 -------------------
 
-Feature engineering is the last part of the data layer. We automate the calculation of technical indicators by connecting the Stockstats or TAlib library in our data processor. Common technical indicators including Moving Average Convergence Divergence (MACD), Relative Strength Index (RSI), Average Directional Index (ADX), and Commodity Channel Index (CCI), and so on, are supported. Users can also quickly add indicators from other libraries, or add the user-defined features directly.
+特征工程是数据层的最后一部分。我们通过在数据处理器中连接Stockstats或TAlib库来自动计算技术指标。支持常见的技术指标,包括移动平均收敛发散(MACD)、相对强弱指数(RSI)、平均方向指数(ADX)和商品通道指数(CCI)等。用户还可以快速添加来自其他库的指标,或直接添加用户定义的特征。
 
-Users can add their features by two ways: 1) Write user-defined feature extraction functions directly. The returned features will be added to a feature array. 2) Store the features in a file, and move it to a specified folder. Then, these features will be obtained by reading from the specified file.
+用户可以通过两种方式添加他们的特征:1)直接编写用户定义的特征提取函数。返回的特征将被添加到特征数组中。2)将特征存储在文件中,并将其移动到指定的文件夹。然后,这些特征将通过从指定文件中读取来获得。
